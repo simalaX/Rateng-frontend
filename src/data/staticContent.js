@@ -165,3 +165,54 @@ export const FAQS = [
       "Yes! We serve Nairobi and upcountry Kenya. Whether you're in Kiambu, Kajiado, Nakuru, or beyond, we can handle your project. Travel and logistics are factored into the quote.",
   },
 ];
+
+export const TESTIMONIALS = [
+  {
+    id: 1,
+    name: "Amani R.",
+    title: "Hotel Owner",
+    location: "Nairobi",
+    quote: "The interior fit-out came together beautifully, and working with Nomad Fabrics through Rateng meant the fabrics matched the brief exactly.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Peter L.",
+    title: "Project Manager",
+    location: "Juba",
+    quote: "Steel frame for our warehouse was erected on schedule despite a tough site. Communication could have been faster early on, but the work itself was solid.",
+    rating: 4,
+  },
+  {
+    id: 3,
+    name: "Jane M.",
+    title: "Property Director",
+    location: "Kampala",
+    quote: "Rateng for both the security gates and glass partitioning. Consistent quality across every different job.",
+    rating: 5,
+  },
+  {
+    id: 4,
+    name: "David K.",
+    title: "Facilities Manager",
+    location: "Nairobi",
+    quote: "Professional team, excellent attention to detail on all finishes. They coordinated seamlessly between different trades.",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "Sarah T.",
+    title: "Office Manager",
+    location: "Kigali",
+    quote: "The office renovation was completed on time and within budget. Great communication throughout the entire process.",
+    rating: 4,
+  },
+  {
+    id: 6,
+    name: "Michael N.",
+    title: "Construction Lead",
+    location: "Mombasa",
+    quote: "Working with Rateng was straightforward. They understand the local market and deliver consistently.",
+    rating: 5,
+  },
+];

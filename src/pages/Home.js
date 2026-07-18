@@ -281,11 +281,7 @@ export default function Home() {
       )}
 
       {/* --------------------------------------------------- Testimonials */}
-      <section className="bg-paper py-20 sm:py-28 bg-blueprint-grid">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <TestimonialsSection dark={false} />
-        </div>
-      </section>
+      <TestimonialsSection dark={false} />
 
       {/* ---------------------------------------------------------- FAQ */}
       <section className="bg-ink py-20 sm:py-28">
