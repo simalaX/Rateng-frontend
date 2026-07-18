@@ -74,6 +74,115 @@ function StatsCarousel() {
   );
 }
 
+function ServiceCarousel() {
+  const [selectedService, setSelectedService] = useState(0);
+
+  return (
+    <section className="bg-paper py-20 sm:py-28">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <SectionHeading
+          eyebrow="What We Do"
+          title="Four disciplines, one contractor"
+          description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
+        />
+
+        {/* Service Cards Grid - 2 cols mobile, 4 cols desktop */}
+        <div className="mt-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {SERVICES.map((service, idx) => (
+            <button
+              key={service.key}
+              onClick={() => setSelectedService(idx)}
+              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 ${selectedService === idx
+                  ? "ring-2 ring-bronze shadow-lg"
+                  : "border border-ink/10 hover:shadow-md"
+                } ${selectedService === idx ? "bg-white" : "bg-white"}`}
+            >
+              {/* Image Container - Smaller */}
+              <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                {/* Badge */}
+                <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
+                  0{idx + 1}
+                </div>
+              </div>
+
+              {/* Content - More compact */}
+              <div className="p-3 sm:p-4">
+                <h3 className="font-heading text-base sm:text-lg font-bold text-ink line-clamp-2">
+                  {service.title}
+                </h3>
+                {selectedService === idx && (
+                  <p className="text-xs sm:text-sm text-ink/70 mt-2">Click for details</p>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Expanded Details - Shown when clicked */}
+        <div className="mt-12 animate-fade-in">
+          <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left side - Image */}
+              <div className="flex flex-col">
+                <img
+                  src={SERVICES[selectedService].image}
+                  alt={SERVICES[selectedService].title}
+                  className="w-full h-64 sm:h-80 object-cover rounded-lg mb-4"
+                />
+              </div>
+
+              {/* Right side - Details */}
+              <div>
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="bg-bronze text-ink font-heading font-bold text-2xl px-4 py-2 rounded-lg">
+                    0{selectedService + 1}
+                  </div>
+                  <div>
+                    <h2 className="font-heading text-2xl sm:text-3xl font-bold text-ink">
+                      {SERVICES[selectedService].title}
+                    </h2>
+                  </div>
+                </div>
+
+                <p className="text-ink/70 leading-relaxed mb-6">
+                  {SERVICES[selectedService].description}
+                </p>
+
+                {/* Items List */}
+                <div className="mb-6">
+                  <h4 className="font-heading font-bold text-ink mb-3">Services Include:</h4>
+                  <ul className="service-list text-ink/70 space-y-2">
+                    {SERVICES[selectedService].items.map((item) => (
+                      <li key={item} className="text-sm sm:text-base">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2">
+                  {SERVICES[selectedService].tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);  // First FAQ open by default
@@ -160,58 +269,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ Services */}
-      <section className="bg-paper py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <SectionHeading
-            eyebrow="What We Do"
-            title="Four disciplines, one contractor"
-            description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
-          />
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {SERVICES.map((service, idx) => (
-              <div
-                key={service.key}
-                className="group cursor-pointer rounded-lg overflow-hidden bg-white border border-ink/10 hover:shadow-lg transition-shadow"
-              >
-                {/* Image Container */}
-                <div className="relative h-56 sm:h-64 overflow-hidden bg-ink/5">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Badge */}
-                  <div className="absolute top-4 left-4 bg-bronze text-ink font-heading font-bold text-sm px-3 py-1.5 rounded-full">
-                    0{idx + 1}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 sm:p-6 flex flex-col h-full">
-                  <h3 className="font-heading text-lg sm:text-xl font-bold text-ink mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm text-ink/70 mb-4 flex-1 leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {service.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ServiceCarousel />
 
       {/* --------------------------------------------------- Featured work */}
       {featured.length > 0 && (
