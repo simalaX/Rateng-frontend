@@ -184,24 +184,46 @@ export default function Home() {
             title="Four disciplines, one contractor"
             description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
           />
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink/10">
-            {SERVICES.map((service) => (
-              <div key={service.key} className="bg-paper p-7 flex flex-col">
-                <span className="font-mono text-xs text-bronze-dark mb-3">
-                  {CATEGORY_LABELS[service.key].code} &mdash; 01
-                </span>
-                <h3 className="font-heading text-xl text-ink mb-3">{service.title}</h3>
-                <ul className="service-list text-sm text-ink/60 space-y-1.5 flex-1">
-                  {service.items.slice(0, 4).map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-                <Link
-                  to="/services"
-                  className="mt-5 font-mono text-xs uppercase tracking-wider text-bronze-dark hover:text-ink inline-flex items-center gap-1.5"
-                >
-                  Full List <FaArrowRight size={10} />
-                </Link>
+          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SERVICES.map((service, idx) => (
+              <div
+                key={service.key}
+                className="group cursor-pointer rounded-lg overflow-hidden bg-white border border-ink/10 hover:shadow-lg transition-shadow"
+              >
+                {/* Image Container */}
+                <div className="relative h-56 sm:h-64 overflow-hidden bg-ink/5">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Badge */}
+                  <div className="absolute top-4 left-4 bg-bronze text-ink font-heading font-bold text-sm px-3 py-1.5 rounded-full">
+                    0{idx + 1}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 sm:p-6 flex flex-col h-full">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold text-ink mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-ink/70 mb-4 flex-1 leading-relaxed">
+                    {service.description}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {service.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

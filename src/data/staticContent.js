@@ -49,8 +49,11 @@ export const STATS = [
 export const SERVICES = [
   {
     key: "construction",
-    title: "Construction",
+    title: "Construction — Design & Build",
     tagline: null,
+    description: "Full design-build delivery for residential and commercial projects — from drawings and approvals through to handover.",
+    image: "https://images.unsplash.com/photo-1504917595217-3404ee9c6601?w=600&h=400&fit=crop",
+    tags: ["Residential", "Commercial", "Renovations"],
     items: [
       "Architectural Design",
       "Structural Design",
@@ -62,22 +65,29 @@ export const SERVICES = [
   },
   {
     key: "steel_fabrication",
-    title: "Steel Fabrication",
-    tagline:
-      "Built for safety, styled for modern living. Engineered to last a lifetime. We offer Steel Fabrication for your home within Nairobi and upcountry.",
+    title: "Steel Fabrication & Installation",
+    tagline: "Built for safety, styled for modern living. Engineered to last a lifetime. We offer Steel Fabrication for your home within Nairobi and upcountry.",
+    description: "Structural steelwork, gates, grills and custom fabrication produced in-house for tighter tolerances and faster turnaround.",
+    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&h=400&fit=crop",
+    tags: ["Structural Steel", "Gates & Grills", "Custom Work"],
     items: ["Windows", "Doors", "Gates", "Pergolas", "Balcony and Staircase Grills."],
   },
   {
     key: "glass_and_aluminium",
-    title: "Glass and Aluminium",
-    tagline:
-      "Elevate your space with our premium glass Installations. Crafted for beauty and functionality.",
+    title: "Aluminium & Glass",
+    tagline: "Elevate your space with our premium glass Installations. Crafted for beauty and functionality.",
+    description: "Curtain walling, glass facades, aluminium windows and partitioning — fabricated and installed by our own glazing teams.",
+    image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop",
+    tags: ["Facades", "Windows", "Partitions"],
     items: ["Curtain Wall", "Shower Cubicles", "Glass Balustrades", "Office Partitions"],
   },
   {
     key: "interior_fittings",
     title: "Interior Fittings",
     tagline: null,
+    description: "Joinery, fit-out and soft furnishing for finished interiors — fabrics supplied through our partner, Nomad Fabrics.",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop",
+    tags: ["Joinery", "Fit-Out", "Soft Furnishing"],
     items: [
       "Gypsum Ceilings",
       "House Painting",
