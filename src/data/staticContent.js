@@ -37,6 +37,14 @@ export const CATEGORY_ORDER = [
   "interior_fittings",
 ];
 
+// Scrolling stats ticker — displayed in hero section after category strip
+export const STATS = [
+  "12+ years in operation",
+  "200+ projects completed",
+  "Operating in Kenya, Uganda & South Sudan",
+  "In-house steel fabrication",
+];
+
 // Verbatim from the client brief — wording preserved exactly as supplied.
 export const SERVICES = [
   {
@@ -77,6 +85,39 @@ export const SERVICES = [
       "Walkin Closets",
       "Tile Installations",
     ],
+  },
+];
+
+export const PROCESS_STEPS = [
+  {
+    number: "01",
+    title: "Consultation",
+    description: "Send your brief on WhatsApp or fill in the contact form. We discuss scope, site, and budget range.",
+  },
+  {
+    number: "02",
+    title: "Site Visit & Survey",
+    description: "Our team visits the site to measure, assess access and confirm technical requirements before quoting.",
+  },
+  {
+    number: "03",
+    title: "Design & Quotation",
+    description: "You receive drawings or specs alongside a itemised quote — materials, labour and timeline laid out clearly.",
+  },
+  {
+    number: "04",
+    title: "Build & Fabrication",
+    description: "Work begins on-site or in our fabrication shop, with progress updates shared as the project moves forward.",
+  },
+  {
+    number: "05",
+    title: "Installation & Finishing",
+    description: "Our own crews handle installation and finishing — no handoff to a separate, unfamiliar fitting team.",
+  },
+  {
+    number: "06",
+    title: "Handover & Warranty",
+    description: "Final walkthrough, sign-off, and a workmanship warranty on completed structural and fabrication work.",
   },
 ];
 

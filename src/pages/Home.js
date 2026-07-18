@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaChevronDown } from "react-icons/fa";
+import { FaArrowRight, FaChevronDown, FaBuilding, FaGlobe, FaTools, FaCouch, FaPencilRuler, FaComments } from "react-icons/fa";
 import client from "../api/client";
 import SEO from "../components/SEO";
 import SectionHeading from "../components/SectionHeading";
 import RatingBadge from "../components/RatingBadge";
 import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
-import { CATEGORY_LABELS, CATEGORY_ORDER, WHY_US, SERVICES, FAQS } from "../data/staticContent";
+import { CATEGORY_LABELS, CATEGORY_ORDER, WHY_US, SERVICES, FAQS, PROCESS_STEPS, STATS } from "../data/staticContent";
 
 function Button({ to, children, variant = "solid" }) {
   const base = "inline-flex items-center gap-2 px-7 py-3.5 font-mono text-xs uppercase tracking-widest transition-colors";
@@ -40,6 +40,34 @@ function FaqItem({ item, isOpen, onToggle }) {
       {isOpen && (
         <p className="pb-6 text-ink/65 leading-relaxed max-w-3xl">{item.answer}</p>
       )}
+    </div>
+  );
+}
+
+function StatsCarousel() {
+  const [visibleStats, setVisibleStats] = useState(STATS);
+
+  useEffect(() => {
+    if (STATS.length < 2) return undefined;
+    const id = setInterval(() => {
+      setVisibleStats((prev) => [...prev.slice(1), prev[0]]);
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="bg-ink/60 backdrop-blur-sm border-y border-plaster/10 overflow-hidden">
+      <div className="flex animate-scroll gap-12 px-5 py-4">
+        {[...visibleStats, ...visibleStats].map((stat, idx) => (
+          <div
+            key={idx}
+            className="flex items-center gap-3 shrink-0 font-mono text-xs sm:text-sm text-plaster/70 whitespace-nowrap"
+          >
+            <span className="text-bronze">◆</span>
+            {stat}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -117,6 +145,33 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Scrolling stats ticker */}
+        <StatsCarousel />
+      </section>
+
+      {/* ------------------------------------------------------ Stat Cards */}
+      <section className="bg-paper py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div className="text-center">
+              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">12+</p>
+              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Years in Operation</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">200+</p>
+              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Projects Completed</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">3</p>
+              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Countries Served</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">4</p>
+              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Specialist Divisions</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ------------------------------------------------------ Services */}
@@ -151,6 +206,29 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ----------------------------------------------- How We Work */}
+      <section className="bg-ink py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <SectionHeading
+            eyebrow="How We Work"
+            title="From first call to handover"
+            description="A straightforward process whether the job is a single steel gate or a full design-build contract."
+            dark
+          />
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {PROCESS_STEPS.map((step) => (
+              <div key={step.number} className="flex flex-col">
+                <div className="flex items-start gap-4 mb-4">
+                  <span className="font-heading text-4xl font-bold text-bronze">{step.number}</span>
+                </div>
+                <h3 className="font-heading text-lg text-plaster mb-2">{step.title}</h3>
+                <p className="text-sm text-plaster/70 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* -------------------------------------------------------- Why Us */}
       <section className="bg-ink py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -159,26 +237,34 @@ export default function Home() {
             title="Built on craftsmanship and follow-through"
             dark
           />
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {WHY_US.map((item) => (
-              <div key={item.title} className="border-t border-bronze/30 pt-5">
-                <h3 className="font-heading text-lg text-plaster mb-2">{item.title}</h3>
-                <p className="text-sm text-plaster/60 leading-relaxed">{item.body}</p>
-              </div>
-            ))}
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {WHY_US.map((item, idx) => {
+              const icons = [FaBuilding, FaGlobe, FaTools, FaCouch, FaPencilRuler, FaComments];
+              const IconComponent = icons[idx % icons.length];
+              return (
+                <div
+                  key={item.title}
+                  className="border border-plaster/15 rounded-lg p-6 bg-ink-light/40 hover:border-bronze/40 transition-colors"
+                >
+                  <IconComponent className="text-bronze mb-4" size={24} />
+                  <h3 className="font-heading text-lg text-plaster mb-2">{item.title}</h3>
+                  <p className="text-sm text-plaster/70 leading-relaxed">{item.body}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* --------------------------------------------------- Featured work */}
       {featured.length > 0 && (
-        <section className="bg-paper py-20 sm:py-28">
+        <section className="bg-ink py-20 sm:py-28">
           <div className="max-w-7xl mx-auto px-5 sm:px-8">
             <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeading eyebrow="Recent Work" title="A look at our portfolio" />
+              <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" dark />
               <Link
                 to="/portfolio"
-                className="font-mono text-xs uppercase tracking-widest text-bronze-dark hover:text-ink inline-flex items-center gap-2"
+                className="font-mono text-xs uppercase tracking-widest text-bronze-light hover:text-bronze inline-flex items-center gap-2"
               >
                 View Full Portfolio <FaArrowRight size={11} />
               </Link>
@@ -193,19 +279,20 @@ export default function Home() {
       )}
 
       {/* --------------------------------------------------- Testimonials */}
-      <section className="bg-ink py-20 sm:py-28 bg-blueprint-grid">
+      <section className="bg-paper py-20 sm:py-28 bg-blueprint-grid">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <TestimonialsSection dark />
+          <TestimonialsSection dark={false} />
         </div>
       </section>
 
       {/* ---------------------------------------------------------- FAQ */}
-      <section className="bg-paper py-20 sm:py-28">
+      <section className="bg-ink py-20 sm:py-28">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
           <SectionHeading
-            eyebrow="Questions"
+            eyebrow="Common Questions"
             title="Frequently Asked Questions"
             description="Get answers to common questions about our services, timelines, and service areas."
+            dark
           />
           <div className="mt-12">
             {FAQS.map((item, i) => (
