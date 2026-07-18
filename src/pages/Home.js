@@ -118,9 +118,12 @@ function ServiceCarousel() {
 
               {/* Content - More compact */}
               <div className="p-3 sm:p-4">
-                <h3 className="font-heading text-base sm:text-lg font-bold text-ink line-clamp-2">
+                <h3 className="font-heading text-base sm:text-lg font-bold text-ink mb-2 line-clamp-2">
                   {service.title}
                 </h3>
+                <p className="text-xs sm:text-sm text-ink/70 leading-relaxed mb-3 line-clamp-3">
+                  {service.description}
+                </p>
               </div>
             </button>
           ))}
