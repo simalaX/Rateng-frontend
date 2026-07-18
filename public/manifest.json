@@ -1,0 +1,25 @@
+{
+  "short_name": "Rateng",
+  "name": "Rateng Construction and Interiors",
+  "icons": [
+    {
+      "src": "rateng.png",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "rateng.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "rateng.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#10161B",
+  "background_color": "#EDE6D8"
+}

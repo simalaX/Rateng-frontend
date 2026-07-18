@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-heading;
+}
+
+/* Visible keyboard focus everywhere, regardless of what's focused */
+:focus-visible {
+  outline: 2px solid theme("colors.bronze.DEFAULT");
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Blueprint grid background used behind the hero and a few dark sections */
+.bg-blueprint-grid {
+  background-image:
+    linear-gradient(rgba(173, 131, 72, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 131, 72, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Drafting-style square bullets for service lists, replacing default discs */
+.service-list {
+  list-style: none;
+  padding: 0;
+}
+.service-list li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+.service-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background-color: theme("colors.bronze.DEFAULT");
+}
+
+/* Registration-mark corner ticks, used sparingly as a signature motif */
+.corner-ticks {
+  position: relative;
+}
+.corner-ticks::before,
+.corner-ticks::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: theme("colors.bronze.DEFAULT");
+  opacity: 0.6;
+}
+.corner-ticks::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.corner-ticks::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Consistent, squared-off form field styling across the site */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+  @apply bg-white border border-ink/15 rounded-none px-4 py-3 text-ink placeholder:text-ink/40 focus:border-bronze transition-colors;
+}
