@@ -36,10 +36,15 @@ module.exports = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "scroll": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
         "fade-in": "fade-in 0.9s ease-out both",
+        "scroll": "scroll 10s linear infinite",
       },
     },
   },
