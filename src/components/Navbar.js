@@ -44,10 +44,10 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-30 bg-ink/95 backdrop-blur border-b border-plaster/10">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-24 flex items-center justify-between">
         <NavLink to="/" className="flex items-center gap-3 shrink-0" onClick={() => setOpen(false)}>
-          <img src="/rateng.png" alt="" className="w-12 h-12 sm:w-14 sm:h-14" />
-          <span className="font-heading text-base sm:text-lg md:text-xl text-plaster leading-tight">
+          <img src="/rateng.png" alt="" className="w-16 h-16 sm:w-20 sm:h-20" />
+          <span className="font-heading text-lg sm:text-xl md:text-2xl text-plaster leading-tight">
             {COMPANY.shortName}
             <span className="hidden sm:inline text-plaster/60 font-body text-xs align-middle ml-2">
               Construction &amp; Interiors
