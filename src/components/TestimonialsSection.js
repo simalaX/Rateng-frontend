@@ -73,9 +73,6 @@ export default function TestimonialsSection({ dark = false }) {
                   <h4 className={`font-heading font-semibold ${textClass}`}>
                     {testimonial.name}
                   </h4>
-                  <p className={`text-xs sm:text-sm ${dark ? "text-plaster/60" : "text-ink/60"}`}>
-                    {testimonial.title}
-                  </p>
                   <p className={`text-xs ${dark ? "text-plaster/50" : "text-ink/50"}`}>
                     {testimonial.location}
                   </p>
