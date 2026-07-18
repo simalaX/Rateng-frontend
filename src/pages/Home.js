@@ -98,10 +98,10 @@ function ServiceCarousel() {
             <button
               key={service.key}
               onClick={() => handleServiceClick(idx)}
-              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 ${selectedService === idx && isExpanded
+              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full ${selectedService === idx && isExpanded
                   ? "ring-2 ring-bronze shadow-lg"
                   : "border border-ink/10 hover:shadow-md"
-                } ${selectedService === idx && isExpanded ? "bg-white" : "bg-white"}`}
+                } bg-white`}
             >
               {/* Image Container - Smaller */}
               <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
@@ -116,12 +116,12 @@ function ServiceCarousel() {
                 </div>
               </div>
 
-              {/* Content - More compact */}
-              <div className="p-3 sm:p-4">
-                <h3 className="font-heading text-base sm:text-lg font-bold text-ink mb-2 line-clamp-2">
+              {/* Content - Show description */}
+              <div className="p-3 sm:p-4 flex flex-col flex-1">
+                <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-2 line-clamp-2">
                   {service.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-ink/70 leading-relaxed mb-3 line-clamp-3">
+                <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
                   {service.description}
                 </p>
               </div>
