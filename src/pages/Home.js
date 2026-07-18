@@ -108,48 +108,31 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
           <div className="corner-ticks max-w-3xl py-2 animate-fade-up">
             <p className="font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-bronze-light mb-6">
-              General Contractor &mdash; Nairobi &amp; Upcountry, Kenya
+              Design • Build • Furnish — Kenya • Uganda • South Sudan
             </p>
             <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-semibold text-plaster leading-[1.05]">
-              Building Excellence.
+              We Build It.
               <br />
-              <span className="text-bronze-light">Engineered for Life.</span>
+              We Fit It.
+              <br />
+              <span className="text-bronze-light">We Finish It.</span>
             </h1>
-            <p className="mt-6 text-plaster/70 text-base sm:text-lg max-w-xl leading-relaxed">
-              From architectural design to steel fabrication, glass &amp; aluminium, and interior
-              fit-out &mdash; Rateng Construction and Interiors delivers every trade under one
-              roof.
+            <p className="mt-6 text-plaster/70 text-base sm:text-lg max-w-2xl leading-relaxed">
+              From structural steel and aluminium & glass facades to fully furnished interiors — Rateng delivers construction and design under one roof, across East Africa.
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
               <Button to="/contact">
-                Get a Free Quote <FaArrowRight size={12} />
+                Request a Quote <FaArrowRight size={12} />
               </Button>
               <Button to="/portfolio" variant="outline">
-                View Our Work
+                See Our Projects
               </Button>
             </div>
             <div className="mt-8">
               <RatingBadge dark />
             </div>
           </div>
-
-          {/* Title-block style sheet index strip — signature motif */}
-          <div className="mt-16 border border-plaster/15 bg-ink/40 backdrop-blur-sm animate-fade-in">
-            <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-plaster/15">
-              {CATEGORY_ORDER.map((key) => (
-                <div key={key} className="px-5 py-4 flex items-center gap-3">
-                  <span className="font-mono text-bronze text-lg">{CATEGORY_LABELS[key].code}</span>
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-plaster/70 leading-tight">
-                    {CATEGORY_LABELS[key].label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
-
-        {/* Scrolling stats ticker */}
-        <StatsCarousel />
       </section>
 
       {/* ------------------------------------------------------ Stat Cards */}
