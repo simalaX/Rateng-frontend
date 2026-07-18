@@ -208,6 +208,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* --------------------------------------------------- Featured work */}
+      {featured.length > 0 && (
+        <section className="bg-paper py-20 sm:py-28">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" description="A sample of the design-build, fabrication and fit-out work delivered across the region." />
+              <Link
+                to="/portfolio"
+                className="font-mono text-xs uppercase tracking-widest text-bronze-dark hover:text-ink inline-flex items-center gap-2"
+              >
+                View Full Portfolio <FaArrowRight size={11} />
+              </Link>
+            </div>
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured.map((item) => (
+                <MediaCard key={item.id} item={item} type="image" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ----------------------------------------------- How We Work */}
       <section className="bg-ink py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -257,28 +279,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* --------------------------------------------------- Featured work */}
-      {featured.length > 0 && (
-        <section className="bg-ink py-20 sm:py-28">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" dark />
-              <Link
-                to="/portfolio"
-                className="font-mono text-xs uppercase tracking-widest text-bronze-light hover:text-bronze inline-flex items-center gap-2"
-              >
-                View Full Portfolio <FaArrowRight size={11} />
-              </Link>
-            </div>
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featured.map((item) => (
-                <MediaCard key={item.id} item={item} type="image" />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* --------------------------------------------------- Testimonials */}
       <TestimonialsSection dark={false} />
