@@ -115,15 +115,12 @@ function ServiceCarousel() {
                 <h3 className="font-heading text-base sm:text-lg font-bold text-ink line-clamp-2">
                   {service.title}
                 </h3>
-                {selectedService === idx && (
-                  <p className="text-xs sm:text-sm text-ink/70 mt-2">Click for details</p>
-                )}
               </div>
             </button>
           ))}
         </div>
 
-        {/* Expanded Details - Shown when clicked */}
+        {/* Expanded Details - Always Visible */}
         <div className="mt-12 animate-fade-in">
           <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
