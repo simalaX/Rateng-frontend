@@ -273,18 +273,18 @@ export default function Home() {
 
       {/* --------------------------------------------------- Featured work */}
       {featured.length > 0 && (
-        <section className="bg-paper py-20 sm:py-28">
+        <section className="bg-paper py-16 sm:py-28">
           <div className="max-w-7xl mx-auto px-5 sm:px-8">
-            <div className="flex flex-wrap items-end justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-12">
               <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" description="A sample of the design-build, fabrication and fit-out work delivered across the region." />
               <Link
                 to="/portfolio"
-                className="font-mono text-xs uppercase tracking-widest text-bronze-dark hover:text-ink inline-flex items-center gap-2"
+                className="font-mono text-xs uppercase tracking-widest text-bronze-dark hover:text-ink inline-flex items-center gap-2 shrink-0"
               >
                 View Full Portfolio <FaArrowRight size={11} />
               </Link>
             </div>
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {featured.map((item) => (
                 <MediaCard key={item.id} item={item} type="image" />
               ))}
