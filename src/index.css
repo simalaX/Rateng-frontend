@@ -10,7 +10,10 @@ body {
   @apply bg-paper text-ink font-body antialiased;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   @apply font-heading;
 }
 
@@ -26,7 +29,10 @@ h1, h2, h3, h4 {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -46,10 +52,12 @@ h1, h2, h3, h4 {
   list-style: none;
   padding: 0;
 }
+
 .service-list li {
   position: relative;
   padding-left: 1.4rem;
 }
+
 .service-list li::before {
   content: "";
   position: absolute;
@@ -64,6 +72,7 @@ h1, h2, h3, h4 {
 .corner-ticks {
   position: relative;
 }
+
 .corner-ticks::before,
 .corner-ticks::after {
   content: "";
@@ -73,12 +82,14 @@ h1, h2, h3, h4 {
   border-color: theme("colors.bronze.DEFAULT");
   opacity: 0.6;
 }
+
 .corner-ticks::before {
   top: 0;
   left: 0;
   border-top: 1px solid;
   border-left: 1px solid;
 }
+
 .corner-ticks::after {
   bottom: 0;
   right: 0;
@@ -95,4 +106,25 @@ input[type="search"],
 select,
 textarea {
   @apply bg-white border border-ink/15 rounded-none px-4 py-3 text-ink placeholder:text-ink/40 focus:border-bronze transition-colors;
+}
+
+/* FAQ styling for better visibility and animation */
+.faq-button {
+  @apply w-full flex items-start justify-between gap-4 py-6 px-1 text-left hover:bg-ink-light/20 transition-colors;
+}
+
+.faq-answer {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

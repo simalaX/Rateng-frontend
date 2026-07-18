@@ -24,21 +24,23 @@ function Button({ to, children, variant = "solid" }) {
 
 function FaqItem({ item, isOpen, onToggle }) {
   return (
-    <div className="border-b border-ink/10">
+    <div className="border-b border-plaster/20 last:border-b-0">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between gap-4 py-6 text-left"
+        className="w-full flex items-start justify-between gap-4 py-6 text-left hover:bg-ink-light/20 transition-colors px-1"
       >
-        <span className="font-heading text-lg sm:text-xl text-ink">{item.question}</span>
+        <span className="font-heading text-base sm:text-lg text-plaster font-semibold">{item.question}</span>
         <FaChevronDown
-          className={`shrink-0 text-bronze transition-transform ${isOpen ? "rotate-180" : ""}`}
-          size={14}
+          className={`shrink-0 text-bronze transition-transform mt-1 ${isOpen ? "rotate-180" : ""}`}
+          size={16}
         />
       </button>
       {isOpen && (
-        <p className="pb-6 text-ink/65 leading-relaxed max-w-3xl">{item.answer}</p>
+        <div className="pb-6 px-1">
+          <p className="text-plaster/75 leading-relaxed text-sm sm:text-base">{item.answer}</p>
+        </div>
       )}
     </div>
   );
@@ -74,7 +76,7 @@ function StatsCarousel() {
 
 export default function Home() {
   const [featured, setFeatured] = useState([]);
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);  // First FAQ open by default
 
   useEffect(() => {
     let active = true;
@@ -294,7 +296,7 @@ export default function Home() {
             description="Get answers to common questions about our services, timelines, and service areas."
             dark
           />
-          <div className="mt-12">
+          <div className="mt-16 space-y-0">
             {FAQS.map((item, i) => (
               <FaqItem
                 key={item.question}
