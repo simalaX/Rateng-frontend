@@ -1,10 +1,9 @@
 import { FaStar } from "react-icons/fa";
 import { COMPANY } from "../data/staticContent";
 
-// Demo values by default (REACT_APP_GOOGLE_RATING / REACT_APP_GOOGLE_REVIEW_COUNT).
+// Demo values by default (REACT_APP_GOOGLE_RATING).
 // Update these once your Google Business Profile is live — see the frontend README.
 const rating = process.env.REACT_APP_GOOGLE_RATING || COMPANY.googleRating;
-const reviewCount = process.env.REACT_APP_GOOGLE_REVIEW_COUNT || COMPANY.googleReviewCount;
 
 export default function RatingBadge({ dark = false }) {
   return (
@@ -18,7 +17,7 @@ export default function RatingBadge({ dark = false }) {
         ))}
       </span>
       <span>
-        {rating}/5{reviewCount ? ` · ${reviewCount} Google Reviews` : ""}
+        {rating}/5
       </span>
     </div>
   );

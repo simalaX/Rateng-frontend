@@ -153,24 +153,24 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ Stat Cards */}
-      <section className="bg-paper py-16 sm:py-24">
+      <section className="bg-paper py-12 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">12+</p>
-              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Years in Operation</p>
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">12+</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Years in Operation</p>
             </div>
             <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">200+</p>
-              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Projects Completed</p>
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">200+</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Projects Completed</p>
             </div>
             <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">3</p>
-              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Countries Served</p>
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">3</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Countries Served</p>
             </div>
             <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">4</p>
-              <p className="font-mono text-xs uppercase tracking-wider text-ink/60">Specialist Divisions</p>
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">4</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Specialist Divisions</p>
             </div>
           </div>
         </div>
