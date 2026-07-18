@@ -76,6 +76,12 @@ function StatsCarousel() {
 
 function ServiceCarousel() {
   const [selectedService, setSelectedService] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleServiceClick = (idx) => {
+    setSelectedService(idx);
+    setIsExpanded(true);
+  };
 
   return (
     <section className="bg-paper py-20 sm:py-28">
@@ -91,11 +97,11 @@ function ServiceCarousel() {
           {SERVICES.map((service, idx) => (
             <button
               key={service.key}
-              onClick={() => setSelectedService(idx)}
-              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 ${selectedService === idx
+              onClick={() => handleServiceClick(idx)}
+              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 ${selectedService === idx && isExpanded
                   ? "ring-2 ring-bronze shadow-lg"
                   : "border border-ink/10 hover:shadow-md"
-                } ${selectedService === idx ? "bg-white" : "bg-white"}`}
+                } ${selectedService === idx && isExpanded ? "bg-white" : "bg-white"}`}
             >
               {/* Image Container - Smaller */}
               <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
@@ -120,61 +126,63 @@ function ServiceCarousel() {
           ))}
         </div>
 
-        {/* Expanded Details - Always Visible */}
-        <div className="mt-12 animate-fade-in">
-          <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Left side - Image */}
-              <div className="flex flex-col">
-                <img
-                  src={SERVICES[selectedService].image}
-                  alt={SERVICES[selectedService].title}
-                  className="w-full h-64 sm:h-80 object-cover rounded-lg mb-4"
-                />
-              </div>
-
-              {/* Right side - Details */}
-              <div>
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="bg-bronze text-ink font-heading font-bold text-2xl px-4 py-2 rounded-lg">
-                    0{selectedService + 1}
-                  </div>
-                  <div>
-                    <h2 className="font-heading text-2xl sm:text-3xl font-bold text-ink">
-                      {SERVICES[selectedService].title}
-                    </h2>
-                  </div>
+        {/* Expanded Details - Only shown when clicked */}
+        {isExpanded && (
+          <div className="mt-12 animate-fade-in">
+            <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left side - Image */}
+                <div className="flex flex-col">
+                  <img
+                    src={SERVICES[selectedService].image}
+                    alt={SERVICES[selectedService].title}
+                    className="w-full h-64 sm:h-80 object-cover rounded-lg mb-4"
+                  />
                 </div>
 
-                <p className="text-ink/70 leading-relaxed mb-6">
-                  {SERVICES[selectedService].description}
-                </p>
+                {/* Right side - Details */}
+                <div>
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="bg-bronze text-ink font-heading font-bold text-2xl px-4 py-2 rounded-lg">
+                      0{selectedService + 1}
+                    </div>
+                    <div>
+                      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-ink">
+                        {SERVICES[selectedService].title}
+                      </h2>
+                    </div>
+                  </div>
 
-                {/* Items List */}
-                <div className="mb-6">
-                  <h4 className="font-heading font-bold text-ink mb-3">Services Include:</h4>
-                  <ul className="service-list text-ink/70 space-y-2">
-                    {SERVICES[selectedService].items.map((item) => (
-                      <li key={item} className="text-sm sm:text-base">{item}</li>
+                  <p className="text-ink/70 leading-relaxed mb-6">
+                    {SERVICES[selectedService].description}
+                  </p>
+
+                  {/* Items List */}
+                  <div className="mb-6">
+                    <h4 className="font-heading font-bold text-ink mb-3">Services Include:</h4>
+                    <ul className="service-list text-ink/70 space-y-2">
+                      {SERVICES[selectedService].items.map((item) => (
+                        <li key={item} className="text-sm sm:text-base">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {SERVICES[selectedService].tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
+                      >
+                        {tag}
+                      </span>
                     ))}
-                  </ul>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2">
-                  {SERVICES[selectedService].tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
