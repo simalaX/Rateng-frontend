@@ -99,8 +99,8 @@ function ServiceCarousel() {
               key={service.key}
               onClick={() => handleServiceClick(idx)}
               className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full ${selectedService === idx && isExpanded
-                  ? "ring-2 ring-bronze shadow-lg"
-                  : "border border-ink/10 hover:shadow-md"
+                ? "ring-2 ring-bronze shadow-lg"
+                : "border border-ink/10 hover:shadow-md"
                 } bg-white`}
             >
               {/* Image Container - Smaller */}
@@ -310,7 +310,7 @@ export default function Home() {
             description="A straightforward process whether the job is a single steel gate or a full design-build contract."
             dark
           />
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {PROCESS_STEPS.map((step) => (
               <div key={step.number} className="flex flex-col">
                 <div className="flex items-start gap-4 mb-4">
