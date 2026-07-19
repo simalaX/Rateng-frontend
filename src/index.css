@@ -2,7 +2,9 @@
    GLOBAL STYLES + LUXURY DESIGN SYSTEM
    Add this to your existing globals.css
    ============================================================ */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* 1. IMPORT LUXURY SERIF FONT */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap');
 
