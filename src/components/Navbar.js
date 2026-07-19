@@ -55,7 +55,11 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8">
           {/* Logo - Larger */}
           <NavLink to="/" className="flex items-center gap-3 shrink-0">
-            <img src="/rateng.png" alt="Rateng" className="w-14 h-14 sm:w-16 sm:h-16" />
+            <img
+              src="/rateng.png"
+              alt="Rateng"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+            />
           </NavLink>
 
           {/* Center: Contact Info */}
