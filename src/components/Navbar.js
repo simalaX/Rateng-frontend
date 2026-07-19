@@ -54,13 +54,13 @@ export default function Navbar() {
       <div className="bg-paper border-b border-plaster/20 px-5 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8">
           {/* Logo - Larger */}
-          <NavLink to="/" className="flex items-center gap-3 shrink-0">
+          <NavLink to="/" className="flex items-center gap-3">
             <img
               src="/rateng.png"
               alt="Rateng"
               className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
             />
-            <span className="ml-2 font-heading text-base text-ink sm:hidden">
+            <span className="ml-2 font-heading text-sm text-ink leading-tight block sm:hidden max-w-[160px]">
               {COMPANY.name}
             </span>
           </NavLink>
