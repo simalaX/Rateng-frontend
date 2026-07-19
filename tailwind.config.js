@@ -3,6 +3,7 @@ module.exports = {
   content: ["./src/**/*.{js,jsx}", "./public/index.html"],
   theme: {
     extend: {
+      // ========== EXISTING COLORS (KEEP AS IS) ==========
       colors: {
         ink: {
           DEFAULT: "#10161B",
@@ -22,11 +23,64 @@ module.exports = {
         plaster: "#EDE6D8",
         paper: "#F7F4EE",
       },
+
+      // ========== EXISTING FONTS + LUXURY SERIF ==========
       fontFamily: {
-        heading: ["'Fraunces'", "serif"],
-        body: ["'Inter'", "sans-serif"],
-        mono: ["'IBM Plex Mono'", "monospace"],
+        heading: ["'Fraunces'", "serif"],           // Keep existing
+        body: ["'Inter'", "sans-serif"],            // Keep existing
+        mono: ["'IBM Plex Mono'", "monospace"],     // Keep existing
+        serif: ["'Playfair Display'", "Georgia", "serif"],  // NEW: Luxury serif
       },
+
+      // ========== LUXURY: LETTER SPACING ==========
+      letterSpacing: {
+        tighter: "-0.02em",
+        tight: "-0.01em",
+        normal: "0em",
+        wide: "0.02em",
+        wider: "0.05em",
+        widest: "0.1em",
+        premium: "0.15em",     // NEW: For buttons
+        ultra: "0.2em",        // NEW: For headings
+      },
+
+      // ========== LUXURY: ADDITIONAL SPACING ==========
+      spacing: {
+        28: "7rem",   // NEW: 112px
+        32: "8rem",   // NEW: 128px
+        36: "9rem",   // NEW: 144px
+        40: "10rem",  // NEW: 160px
+        48: "12rem",  // NEW: 192px
+      },
+
+      // ========== LUXURY: REFINED BORDER RADIUS ==========
+      borderRadius: {
+        xs: "2px",    // NEW: Extra small (minimal)
+        sm: "2px",    // NEW: Small (minimal)
+        // base, md, lg use Tailwind defaults
+      },
+
+      // ========== LUXURY: BORDER WIDTH ==========
+      borderWidth: {
+        "0.5": "0.5px",  // NEW: Hairline borders
+      },
+
+      // ========== LUXURY: TRANSITION DURATIONS ==========
+      transitionDuration: {
+        250: "250ms",  // NEW: Quick transitions
+        350: "350ms",  // NEW: Smooth transitions
+        400: "400ms",  // NEW: Deliberate transitions
+      },
+
+      // ========== LUXURY: PREMIUM SHADOWS ==========
+      boxShadow: {
+        sm: "0 1px 2px rgba(0, 0, 0, 0.05)",
+        md: "0 4px 6px rgba(0, 0, 0, 0.08)",
+        lg: "0 10px 15px rgba(0, 0, 0, 0.1)",
+        premium: "0 2px 8px rgba(0, 0, 0, 0.06)",  // NEW: Subtle luxury shadow
+      },
+
+      // ========== EXISTING KEYFRAMES & ANIMATIONS (KEEP AS IS) ==========
       keyframes: {
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(16px)" },
