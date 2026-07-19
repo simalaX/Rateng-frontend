@@ -7,7 +7,7 @@ import SectionHeading from "../components/SectionHeading";
 import RatingBadge from "../components/RatingBadge";
 import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
-import { CATEGORY_LABELS, CATEGORY_ORDER, WHY_US, SERVICES, FAQS, PROCESS_STEPS, STATS } from "../data/staticContent";
+import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 function Button({ to, children, variant = "solid" }) {
   const base = "inline-flex items-center gap-2 px-7 py-3.5 font-mono text-xs uppercase tracking-widest transition-colors";
@@ -46,68 +46,9 @@ function FaqItem({ item, isOpen, onToggle }) {
   );
 }
 
-function StatsCarousel() {
-  const [visibleStats, setVisibleStats] = useState(STATS);
-
-  useEffect(() => {
-    if (STATS.length < 2) return undefined;
-    const id = setInterval(() => {
-      setVisibleStats((prev) => [...prev.slice(1), prev[0]]);
-    }, 4000);
-    return () => clearInterval(id);
-  }, []);
-
+function ServicesGrid() {
   return (
-    <div className="bg-ink/60 backdrop-blur-sm border-y border-plaster/10 overflow-hidden">
-      <div className="flex animate-scroll gap-12 px-5 py-4">
-        {[...visibleStats, ...visibleStats].map((stat, idx) => (
-          <div
-            key={idx}
-            className="flex items-center gap-3 shrink-0 font-mono text-xs sm:text-sm text-plaster/70 whitespace-nowrap"
-          >
-            <span className="text-bronze">◆</span>
-            {stat}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ServiceCarousel() {
-  const [selectedService, setSelectedService] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [autoSlide, setAutoSlide] = useState(0);
-  const [displayedCards, setDisplayedCards] = useState([]);
-
-  const handleServiceClick = (idx) => {
-    setSelectedService(idx);
-    setIsExpanded(true);
-  };
-
-  // Sequential card reveal animation
-  useEffect(() => {
-    let timeoutIds = [];
-    SERVICES.forEach((_, idx) => {
-      const timeoutId = setTimeout(() => {
-        setDisplayedCards((prev) => [...prev, idx]);
-      }, idx * 300); // 300ms delay between each card
-      timeoutIds.push(timeoutId);
-    });
-
-    return () => timeoutIds.forEach(id => clearTimeout(id));
-  }, []);
-
-  // Auto-slide cards every 5 seconds on mobile/tablet
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAutoSlide((prev) => (prev + 1) % SERVICES.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <section className="bg-paper py-20 sm:py-28">
+    <section className="bg-paper py-14 sm:py-20">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <SectionHeading
           eyebrow="What We Do"
@@ -115,163 +56,34 @@ function ServiceCarousel() {
           description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
         />
 
-        {/* Service Cards Carousel - Auto-sliding on mobile/tablet, animated grid on desktop */}
-        <div className="mt-16">
-          {/* Mobile/Tablet Carousel - slides with motion */}
-          <div className="lg:hidden overflow-hidden">
-            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${autoSlide * 100}%)` }}>
-              {SERVICES.map((service, idx) => (
-                <div key={service.key} className="w-full flex-shrink-0 px-2">
-                  <button
-                    onClick={() => handleServiceClick(idx)}
-                    className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
-                      ? "ring-2 ring-bronze shadow-lg"
-                      : "border border-ink/10 hover:shadow-md"
-                      } bg-white`}
-                  >
-                    {/* Image Container */}
-                    <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
-                      <img
-                        src={service.image}
-                        alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {/* Badge */}
-                      <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
-                        0{idx + 1}
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-3 sm:p-4 flex flex-col flex-1">
-                      <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-2 line-clamp-2">
-                        {service.title}
-                      </h3>
-                      <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
-                        {service.description}
-                      </p>
-                    </div>
-                  </button>
+        {/* Static grid — every service visible immediately, no click or slide required */}
+        <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {SERVICES.map((service, idx) => (
+            <div
+              key={service.key}
+              className="bg-white border border-ink/10 rounded-lg overflow-hidden flex flex-col"
+            >
+              <div className="relative h-28 sm:h-40 overflow-hidden bg-ink/5">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-2.5 left-2.5 bg-bronze text-ink font-heading font-bold text-xs px-2 py-0.5 rounded-full">
+                  0{idx + 1}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop Grid - Cards appear one by one */}
-          <div className="hidden lg:grid grid-cols-4 gap-6">
-            {SERVICES.map((service, idx) => (
-              <div
-                key={service.key}
-                className={`transition-all duration-700 ease-out transform ${displayedCards.includes(idx)
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
-                  }`}
-              >
-                <button
-                  onClick={() => handleServiceClick(idx)}
-                  className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
-                    ? "ring-2 ring-bronze shadow-lg"
-                    : "border border-ink/10 hover:shadow-md"
-                    } bg-white`}
-                >
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden bg-ink/5">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {/* Badge */}
-                    <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-sm px-2.5 py-1 rounded-full">
-                      0{idx + 1}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-4 flex flex-col flex-1">
-                    <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
-                      {service.description}
-                    </p>
-                  </div>
-                </button>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Carousel Indicators - Mobile only */}
-        <div className="lg:hidden flex justify-center gap-2 mt-6">
-          {SERVICES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setAutoSlide(idx)}
-              className={`w-2 h-2 rounded-full transition-colors ${autoSlide === idx ? "bg-bronze" : "bg-bronze/30"
-                }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
+              <div className="p-3.5 sm:p-5 flex flex-col flex-1">
+                <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-1.5">
+                  {service.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-ink/65 leading-relaxed">
+                  {service.description}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
-
-        {/* Expanded Details - Only shown when clicked */}
-        {isExpanded && (
-          <div className="mt-12 animate-fade-in">
-            <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left side - Image */}
-                <div className="flex flex-col">
-                  <img
-                    src={SERVICES[selectedService].image}
-                    alt={SERVICES[selectedService].title}
-                    className="w-full h-64 sm:h-80 object-cover rounded-lg mb-4"
-                  />
-                </div>
-
-                {/* Right side - Details */}
-                <div>
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="bg-bronze text-ink font-heading font-bold text-2xl px-4 py-2 rounded-lg">
-                      0{selectedService + 1}
-                    </div>
-                    <div>
-                      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-ink">
-                        {SERVICES[selectedService].title}
-                      </h2>
-                    </div>
-                  </div>
-
-                  <p className="text-ink/70 leading-relaxed mb-6">
-                    {SERVICES[selectedService].description}
-                  </p>
-
-                  {/* Items List */}
-                  <div className="mb-6">
-                    <h4 className="font-heading font-bold text-ink mb-3">Services Include:</h4>
-                    <ul className="service-list text-ink/70 space-y-2">
-                      {SERVICES[selectedService].items.map((item) => (
-                        <li key={item} className="text-sm sm:text-base">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {SERVICES[selectedService].tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
@@ -339,7 +151,7 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ Stat Cards */}
-      <section className="bg-paper py-12 sm:py-20 lg:py-24">
+      <section className="bg-paper py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             <div className="text-center">
@@ -363,13 +175,13 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ Services */}
-      <ServiceCarousel />
+      <ServicesGrid />
 
       {/* --------------------------------------------------- Featured work */}
       {featured.length > 0 && (
-        <section className="bg-paper py-16 sm:py-28">
+        <section className="bg-paper py-14 sm:py-20">
           <div className="max-w-7xl mx-auto px-5 sm:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-10">
               <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" description="A sample of the design-build, fabrication and fit-out work delivered across the region." />
               <Link
                 to="/portfolio"
@@ -388,7 +200,7 @@ export default function Home() {
       )}
 
       {/* ----------------------------------------------- How We Work */}
-      <section className="bg-ink py-20 sm:py-28">
+      <section className="bg-ink py-14 sm:py-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <SectionHeading
             eyebrow="How We Work"
@@ -396,12 +208,10 @@ export default function Home() {
             description="A straightforward process whether the job is a single steel gate or a full design-build contract."
             dark
           />
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {PROCESS_STEPS.map((step) => (
               <div key={step.number} className="flex flex-col">
-                <div className="flex items-start gap-4 mb-4">
-                  <span className="font-heading text-4xl font-bold text-bronze">{step.number}</span>
-                </div>
+                <span className="font-heading text-4xl font-bold text-bronze mb-2 block">{step.number}</span>
                 <h3 className="font-heading text-lg text-plaster mb-2">{step.title}</h3>
                 <p className="text-sm text-plaster/70 leading-relaxed">{step.description}</p>
               </div>
@@ -411,15 +221,15 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------------- Why Us */}
-      <section className="bg-ink py-20 sm:py-28">
+      <section className="bg-ink py-14 sm:py-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
           <SectionHeading
             eyebrow="Why Rateng"
             title="Built on craftsmanship and follow-through"
             dark
           />
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WHY_US.map((item, idx) => {
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {WHY_US.slice(0, 3).map((item, idx) => {
               const icons = [FaBuilding, FaGlobe, FaTools, FaCouch, FaPencilRuler, FaComments];
               const IconComponent = icons[idx % icons.length];
               return (
@@ -441,7 +251,7 @@ export default function Home() {
       <TestimonialsSection dark={false} />
 
       {/* ---------------------------------------------------------- FAQ */}
-      <section className="bg-ink py-20 sm:py-28">
+      <section className="bg-ink py-14 sm:py-20">
         <div className="max-w-3xl mx-auto px-5 sm:px-8">
           <SectionHeading
             eyebrow="Common Questions"
@@ -449,8 +259,8 @@ export default function Home() {
             description="Get answers to common questions about our services, timelines, and service areas."
             dark
           />
-          <div className="mt-16 space-y-0">
-            {FAQS.map((item, i) => (
+          <div className="mt-12 space-y-0">
+            {FAQS.slice(0, 4).map((item, i) => (
               <FaqItem
                 key={item.question}
                 item={item}
@@ -464,7 +274,7 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- CTA */}
       <section className="bg-bronze">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
           <h2 className="font-heading text-2xl sm:text-3xl text-ink font-semibold">
             Ready to start your project?
           </h2>
