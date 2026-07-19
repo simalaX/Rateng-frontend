@@ -5,6 +5,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* 1. IMPORT LUXURY SERIF FONT */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap');
 
@@ -182,25 +183,7 @@
 }
 
 /* ============================================================
-   4. UTILITY: TEXT TRUNCATION & OVERFLOW
-   ============================================================ */
-
-@layer components {
-  .line-clamp-2 {
-    @apply line-clamp-2;
-  }
-
-  .line-clamp-3 {
-    @apply line-clamp-3;
-  }
-
-  .truncate {
-    @apply truncate;
-  }
-}
-
-/* ============================================================
-   5. UTILITY: FOCUS STATES (Accessibility)
+   4. FOCUS STATES (Accessibility)
    ============================================================ */
 
 @layer components {
@@ -210,7 +193,7 @@
 }
 
 /* ============================================================
-   6. QUICK REFERENCE FOR DEVELOPERS
+   5. QUICK REFERENCE FOR DEVELOPERS
    
    LUXURY COMPONENT CLASSES:
    
@@ -236,7 +219,13 @@
    .text-hint               → Hints (50%)
    .text-subtle             → Very light (30%)
    
-   UTILITIES:
+   BUILT-IN TAILWIND UTILITIES (use directly):
+   
+   .line-clamp-2            → Clamp text to 2 lines
+   .line-clamp-3            → Clamp text to 3 lines
+   .truncate                → Single-line truncation
+   
+   CUSTOM UTILITIES:
    
    font-serif               → Playfair Display (luxury headings)
    tracking-premium         → 0.15em (buttons)
