@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaUserShield, FaPhone, FaClock } from "react-icons/fa";
+import { FaBars, FaTimes, FaUserShield, FaPhone, FaClock, FaSearch } from "react-icons/fa";
 import { COMPANY } from "../data/staticContent";
 
 const LINKS = [
@@ -41,37 +41,76 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Contact Bar */}
-      <div className="bg-ink border-b border-plaster/10 px-5 sm:px-8 py-2.5 text-plaster/70">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
-          <a
-            href="tel:+254728977636"
-            className="flex items-center gap-2 text-bronze hover:text-bronze-light transition-colors font-mono"
-          >
-            <FaPhone size={14} />
-            +254 728 977 636
-          </a>
-          <div className="flex items-center gap-2 text-plaster/60 font-mono">
-            <FaClock size={14} />
-            Mon - Fri : 08:00 - 17:00
+      {/* Top Contact & Info Bar */}
+      <div className="bg-paper border-b border-plaster/20 px-5 sm:px-8 py-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-8">
+          {/* Logo */}
+          <NavLink to="/" className="flex items-center gap-3 shrink-0">
+            <img src="/rateng.png" alt="Rateng" className="w-12 h-12 sm:w-14 sm:h-14" />
+          </NavLink>
+
+          {/* Center: Contact Info */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-12 flex-1 sm:justify-center">
+            {/* Phone */}
+            <div className="flex items-start sm:items-center gap-2">
+              <div className="flex flex-col">
+                <span className="font-mono text-xs uppercase tracking-widest text-ink/60 leading-tight">
+                  Customer Support & Sales
+                </span>
+                <a
+                  href="tel:+254728977636"
+                  className="font-heading text-lg sm:text-xl text-bronze hover:text-bronze-light transition-colors"
+                >
+                  +254 728 977 636
+                </a>
+              </div>
+            </div>
+
+            {/* Working Hours */}
+            <div className="flex items-start sm:items-center gap-2">
+              <div className="flex flex-col">
+                <span className="font-mono text-xs uppercase tracking-widest text-ink/60 leading-tight">
+                  Working Time
+                </span>
+                <span className="font-heading text-lg sm:text-xl text-bronze">
+                  Mon - Fri : 08:00 - 17:00
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Search & Menu Toggle */}
+          <div className="flex items-center gap-4 ml-auto sm:ml-0">
+            <button className="text-ink p-2 hover:text-bronze transition-colors">
+              <FaSearch size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              className="sm:hidden text-ink p-2"
+            >
+              {open ? <FaTimes size={22} /> : <FaBars size={22} />}
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Header */}
+      {/* Main Navigation Bar */}
       <header className="sticky top-0 z-30 bg-ink/95 backdrop-blur border-b border-plaster/10">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-24 flex items-center justify-between">
-          <NavLink to="/" className="flex items-center gap-3 shrink-0" onClick={() => setOpen(false)}>
-            <img src="/rateng.png" alt="" className="w-16 h-16 sm:w-20 sm:h-20" />
-            <span className="font-heading text-lg sm:text-xl md:text-2xl text-plaster leading-tight">
-              {COMPANY.shortName}
-              <span className="hidden sm:inline text-plaster/60 font-body text-xs align-middle ml-2">
-                Construction &amp; Interiors
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+          {/* Company Name - visible on mobile only when nav is closed */}
+          {!open && (
+            <div className="sm:hidden">
+              <span className="font-heading text-base text-plaster">
+                {COMPANY.shortName}
               </span>
-            </span>
-          </NavLink>
+            </div>
+          )}
 
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation */}
+          <nav className="hidden sm:flex items-center gap-8 flex-1">
             {LINKS.map((link) => (
               <NavLink key={link.to} to={link.to} className={linkClass} end={link.to === "/"}>
                 {link.label}
@@ -79,26 +118,28 @@ export default function Navbar() {
             ))}
           </nav>
 
+          {/* Mobile Menu Toggle */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            className="lg:hidden text-plaster p-2"
+            className="sm:hidden text-plaster p-2"
           >
             {open ? <FaTimes size={22} /> : <FaBars size={22} />}
           </button>
         </div>
 
+        {/* Mobile Navigation Menu */}
         {open && (
-          <nav className="lg:hidden bg-ink border-t border-plaster/10 px-5 py-6 flex flex-col gap-5">
+          <nav className="sm:hidden bg-ink border-t border-plaster/10 px-5 py-6 flex flex-col gap-5">
             {LINKS.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
-                  `font-heading text-2xl ${isActive ? "text-bronze" : "text-plaster"}`
+                  `font-heading text-lg ${isActive ? "text-bronze" : "text-plaster"}`
                 }
                 end={link.to === "/"}
               >

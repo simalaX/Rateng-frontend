@@ -78,11 +78,25 @@ function ServiceCarousel() {
   const [selectedService, setSelectedService] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [autoSlide, setAutoSlide] = useState(0);
+  const [displayedCards, setDisplayedCards] = useState([]);
 
   const handleServiceClick = (idx) => {
     setSelectedService(idx);
     setIsExpanded(true);
   };
+
+  // Sequential card reveal animation
+  useEffect(() => {
+    let timeoutIds = [];
+    SERVICES.forEach((_, idx) => {
+      const timeoutId = setTimeout(() => {
+        setDisplayedCards((prev) => [...prev, idx]);
+      }, idx * 300); // 300ms delay between each card
+      timeoutIds.push(timeoutId);
+    });
+
+    return () => timeoutIds.forEach(id => clearTimeout(id));
+  }, []);
 
   // Auto-slide cards every 5 seconds on mobile/tablet
   useEffect(() => {
@@ -101,7 +115,7 @@ function ServiceCarousel() {
           description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
         />
 
-        {/* Service Cards Carousel - Auto-sliding on mobile/tablet, grid on desktop */}
+        {/* Service Cards Carousel - Auto-sliding on mobile/tablet, animated grid on desktop */}
         <div className="mt-16">
           {/* Mobile/Tablet Carousel - slides with motion */}
           <div className="lg:hidden overflow-hidden">
@@ -143,40 +157,47 @@ function ServiceCarousel() {
             </div>
           </div>
 
-          {/* Desktop Grid */}
+          {/* Desktop Grid - Cards appear one by one */}
           <div className="hidden lg:grid grid-cols-4 gap-6">
             {SERVICES.map((service, idx) => (
-              <button
+              <div
                 key={service.key}
-                onClick={() => handleServiceClick(idx)}
-                className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full ${selectedService === idx && isExpanded
-                  ? "ring-2 ring-bronze shadow-lg"
-                  : "border border-ink/10 hover:shadow-md"
-                  } bg-white`}
+                className={`transition-all duration-700 ease-out transform ${displayedCards.includes(idx)
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
+                  }`}
               >
-                {/* Image Container */}
-                <div className="relative h-48 overflow-hidden bg-ink/5">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Badge */}
-                  <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-sm px-2.5 py-1 rounded-full">
-                    0{idx + 1}
+                <button
+                  onClick={() => handleServiceClick(idx)}
+                  className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
+                    ? "ring-2 ring-bronze shadow-lg"
+                    : "border border-ink/10 hover:shadow-md"
+                    } bg-white`}
+                >
+                  {/* Image Container */}
+                  <div className="relative h-48 overflow-hidden bg-ink/5">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {/* Badge */}
+                    <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-sm px-2.5 py-1 rounded-full">
+                      0{idx + 1}
+                    </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
-                    {service.description}
-                  </p>
-                </div>
-              </button>
+                  {/* Content */}
+                  <div className="p-4 flex flex-col flex-1">
+                    <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
+                      {service.description}
+                    </p>
+                  </div>
+                </button>
+              </div>
             ))}
           </div>
         </div>
