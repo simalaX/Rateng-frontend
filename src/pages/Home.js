@@ -70,9 +70,10 @@ function ServicesGrid() {
                   setSelectedService(idx);
                   setDetailsOpen(false);
                 }}
-                className={`flex-shrink-0 rounded-full border px-4 py-2 text-xs uppercase tracking-widest transition ${selectedService === idx
-                    ? "bg-bronze text-ink border-bronze"
-                    : "bg-white/90 text-ink/75 border-ink/10 hover:bg-ink-light/70 hover:text-plaster"
+                style={{ animationDelay: `${idx * 90}ms` }}
+                className={`service-tab flex-shrink-0 rounded-full border px-4 py-2 text-xs uppercase tracking-widest transition ${selectedService === idx
+                  ? "bg-bronze text-ink border-bronze"
+                  : "bg-white/90 text-ink/75 border-ink/10 hover:bg-ink-light/70 hover:text-plaster"
                   }`}
               >
                 {item.title}
@@ -80,7 +81,7 @@ function ServicesGrid() {
             ))}
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] items-stretch">
+          <div key={service.key} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] items-stretch animate-service-pop">
             <div className="overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-sm">
               <div className="relative h-72 sm:h-96">
                 <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
