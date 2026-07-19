@@ -77,11 +77,20 @@ function StatsCarousel() {
 function ServiceCarousel() {
   const [selectedService, setSelectedService] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [autoSlide, setAutoSlide] = useState(0);
 
   const handleServiceClick = (idx) => {
     setSelectedService(idx);
     setIsExpanded(true);
   };
+
+  // Auto-slide cards every 5 seconds on mobile/tablet
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAutoSlide((prev) => (prev + 1) % SERVICES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="bg-paper py-20 sm:py-28">
@@ -92,40 +101,96 @@ function ServiceCarousel() {
           description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
         />
 
-        {/* Service Cards Grid - 2 cols mobile, 4 cols desktop */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {SERVICES.map((service, idx) => (
-            <button
-              key={service.key}
-              onClick={() => handleServiceClick(idx)}
-              className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full ${selectedService === idx && isExpanded
-                ? "ring-2 ring-bronze shadow-lg"
-                : "border border-ink/10 hover:shadow-md"
-                } bg-white`}
-            >
-              {/* Image Container - Smaller */}
-              <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                {/* Badge */}
-                <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
-                  0{idx + 1}
-                </div>
-              </div>
+        {/* Service Cards Carousel - Auto-sliding on mobile/tablet, grid on desktop */}
+        <div className="mt-16">
+          {/* Mobile/Tablet Carousel - slides with motion */}
+          <div className="lg:hidden overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${autoSlide * 100}%)` }}>
+              {SERVICES.map((service, idx) => (
+                <div key={service.key} className="w-full flex-shrink-0 px-2">
+                  <button
+                    onClick={() => handleServiceClick(idx)}
+                    className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
+                      ? "ring-2 ring-bronze shadow-lg"
+                      : "border border-ink/10 hover:shadow-md"
+                      } bg-white`}
+                  >
+                    {/* Image Container */}
+                    <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {/* Badge */}
+                      <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
+                        0{idx + 1}
+                      </div>
+                    </div>
 
-              {/* Content - Show description */}
-              <div className="p-3 sm:p-4 flex flex-col flex-1">
-                <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-2 line-clamp-2">
-                  {service.title}
-                </h3>
-                <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
-                  {service.description}
-                </p>
-              </div>
-            </button>
+                    {/* Content */}
+                    <div className="p-3 sm:p-4 flex flex-col flex-1">
+                      <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-2 line-clamp-2">
+                        {service.title}
+                      </h3>
+                      <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
+                        {service.description}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop Grid */}
+          <div className="hidden lg:grid grid-cols-4 gap-6">
+            {SERVICES.map((service, idx) => (
+              <button
+                key={service.key}
+                onClick={() => handleServiceClick(idx)}
+                className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full ${selectedService === idx && isExpanded
+                  ? "ring-2 ring-bronze shadow-lg"
+                  : "border border-ink/10 hover:shadow-md"
+                  } bg-white`}
+              >
+                {/* Image Container */}
+                <div className="relative h-48 overflow-hidden bg-ink/5">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Badge */}
+                  <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-sm px-2.5 py-1 rounded-full">
+                    0{idx + 1}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4 flex flex-col flex-1">
+                  <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
+                    {service.description}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel Indicators - Mobile only */}
+        <div className="lg:hidden flex justify-center gap-2 mt-6">
+          {SERVICES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setAutoSlide(idx)}
+              className={`w-2 h-2 rounded-full transition-colors ${autoSlide === idx ? "bg-bronze" : "bg-bronze/30"
+                }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
           ))}
         </div>
 
@@ -193,7 +258,7 @@ function ServiceCarousel() {
 
 export default function Home() {
   const [featured, setFeatured] = useState([]);
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);  // First FAQ open by default
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   useEffect(() => {
     let active = true;
