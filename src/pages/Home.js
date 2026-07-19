@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaChevronDown, FaBuilding, FaGlobe, FaTools, FaCouch, FaPencilRuler, FaComments } from "react-icons/fa";
 import client from "../api/client";
 import SEO from "../components/SEO";
-import { SERVICES } from "../data/staticContent";
+import SectionHeading from "../components/SectionHeading";
+import RatingBadge from "../components/RatingBadge";
+import MediaCard from "../components/MediaCard";
+import TestimonialsSection from "../components/TestimonialsSection";
+import { CATEGORY_LABELS, CATEGORY_ORDER, WHY_US, SERVICES, FAQS, PROCESS_STEPS, STATS } from "../data/staticContent";
 
 function Button({ to, children, variant = "solid" }) {
-  const base = "inline-flex items-center gap-2 px-7 py-3.5 font-mono text-xs uppercase tracking-widest transition-colors rounded";
+  const base = "inline-flex items-center gap-2 px-7 py-3.5 font-mono text-xs uppercase tracking-widest transition-colors";
   const styles =
     variant === "solid"
       ? "bg-bronze text-ink hover:bg-bronze-light"
@@ -18,61 +22,278 @@ function Button({ to, children, variant = "solid" }) {
   );
 }
 
-function ServiceCard({ service, idx, isDisplayed }) {
+function FaqItem({ item, isOpen, onToggle }) {
   return (
-    <div
-      className={`transition-all duration-700 ease-out transform ${isDisplayed
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-8"
-        }`}
-    >
-      <div className="rounded-lg overflow-hidden border border-ink/10 hover:shadow-lg transition-all bg-white h-full flex flex-col">
-        {/* Image */}
-        <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
-          <img
-            src={service.image}
-            alt={service.title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          />
-          <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
-            0{idx + 1}
-          </div>
+    <div className="border-b border-plaster/20 last:border-b-0">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="w-full flex items-start justify-between gap-4 py-6 text-left hover:bg-ink-light/20 transition-colors px-1"
+      >
+        <span className="font-heading text-base sm:text-lg text-plaster font-semibold">{item.question}</span>
+        <FaChevronDown
+          className={`shrink-0 text-bronze transition-transform mt-1 ${isOpen ? "rotate-180" : ""}`}
+          size={16}
+        />
+      </button>
+      {isOpen && (
+        <div className="pb-6 px-1">
+          <p className="text-plaster/75 leading-relaxed text-sm sm:text-base">{item.answer}</p>
         </div>
+      )}
+    </div>
+  );
+}
 
-        {/* Content */}
-        <div className="p-4 flex flex-col flex-1">
-          <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
-            {service.title}
-          </h3>
-          <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
-            {service.description}
-          </p>
-          <Link
-            to="/services"
-            className="mt-4 inline-flex items-center gap-2 text-bronze hover:text-bronze-light text-xs font-mono uppercase tracking-widest transition-colors"
+function StatsCarousel() {
+  const [visibleStats, setVisibleStats] = useState(STATS);
+
+  useEffect(() => {
+    if (STATS.length < 2) return undefined;
+    const id = setInterval(() => {
+      setVisibleStats((prev) => [...prev.slice(1), prev[0]]);
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="bg-ink/60 backdrop-blur-sm border-y border-plaster/10 overflow-hidden">
+      <div className="flex animate-scroll gap-12 px-5 py-4">
+        {[...visibleStats, ...visibleStats].map((stat, idx) => (
+          <div
+            key={idx}
+            className="flex items-center gap-3 shrink-0 font-mono text-xs sm:text-sm text-plaster/70 whitespace-nowrap"
           >
-            Learn More <FaArrowRight size={10} />
-          </Link>
-        </div>
+            <span className="text-bronze">◆</span>
+            {stat}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-export default function LandingHome() {
-  const [displayedServices, setDisplayedServices] = useState([]);
+function ServiceCarousel() {
+  const [selectedService, setSelectedService] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [autoSlide, setAutoSlide] = useState(0);
+  const [displayedCards, setDisplayedCards] = useState([]);
 
-  // Sequential service reveal
+  const handleServiceClick = (idx) => {
+    setSelectedService(idx);
+    setIsExpanded(true);
+  };
+
+  // Sequential card reveal animation
   useEffect(() => {
     let timeoutIds = [];
     SERVICES.forEach((_, idx) => {
       const timeoutId = setTimeout(() => {
-        setDisplayedServices((prev) => [...prev, idx]);
-      }, idx * 300);
+        setDisplayedCards((prev) => [...prev, idx]);
+      }, idx * 300); // 300ms delay between each card
       timeoutIds.push(timeoutId);
     });
 
     return () => timeoutIds.forEach(id => clearTimeout(id));
+  }, []);
+
+  // Auto-slide cards every 5 seconds on mobile/tablet
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAutoSlide((prev) => (prev + 1) % SERVICES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="bg-paper py-20 sm:py-28">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <SectionHeading
+          eyebrow="What We Do"
+          title="Four disciplines, one contractor"
+          description="Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated."
+        />
+
+        {/* Service Cards Carousel - Auto-sliding on mobile/tablet, animated grid on desktop */}
+        <div className="mt-16">
+          {/* Mobile/Tablet Carousel - slides with motion */}
+          <div className="lg:hidden overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${autoSlide * 100}%)` }}>
+              {SERVICES.map((service, idx) => (
+                <div key={service.key} className="w-full flex-shrink-0 px-2">
+                  <button
+                    onClick={() => handleServiceClick(idx)}
+                    className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
+                      ? "ring-2 ring-bronze shadow-lg"
+                      : "border border-ink/10 hover:shadow-md"
+                      } bg-white`}
+                  >
+                    {/* Image Container */}
+                    <div className="relative h-40 sm:h-48 overflow-hidden bg-ink/5">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {/* Badge */}
+                      <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-xs sm:text-sm px-2.5 py-1 rounded-full">
+                        0{idx + 1}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-3 sm:p-4 flex flex-col flex-1">
+                      <h3 className="font-heading text-sm sm:text-base font-bold text-ink mb-2 line-clamp-2">
+                        {service.title}
+                      </h3>
+                      <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
+                        {service.description}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop Grid - Cards appear one by one */}
+          <div className="hidden lg:grid grid-cols-4 gap-6">
+            {SERVICES.map((service, idx) => (
+              <div
+                key={service.key}
+                className={`transition-all duration-700 ease-out transform ${displayedCards.includes(idx)
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
+                  }`}
+              >
+                <button
+                  onClick={() => handleServiceClick(idx)}
+                  className={`group text-left rounded-lg overflow-hidden transition-all duration-300 flex flex-col h-full w-full ${selectedService === idx && isExpanded
+                    ? "ring-2 ring-bronze shadow-lg"
+                    : "border border-ink/10 hover:shadow-md"
+                    } bg-white`}
+                >
+                  {/* Image Container */}
+                  <div className="relative h-48 overflow-hidden bg-ink/5">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    {/* Badge */}
+                    <div className="absolute top-3 left-3 bg-bronze text-ink font-heading font-bold text-sm px-2.5 py-1 rounded-full">
+                      0{idx + 1}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4 flex flex-col flex-1">
+                    <h3 className="font-heading text-base font-bold text-ink mb-2 line-clamp-2">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-ink/70 leading-relaxed line-clamp-3 flex-1">
+                      {service.description}
+                    </p>
+                  </div>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel Indicators - Mobile only */}
+        <div className="lg:hidden flex justify-center gap-2 mt-6">
+          {SERVICES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setAutoSlide(idx)}
+              className={`w-2 h-2 rounded-full transition-colors ${autoSlide === idx ? "bg-bronze" : "bg-bronze/30"
+                }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Expanded Details - Only shown when clicked */}
+        {isExpanded && (
+          <div className="mt-12 animate-fade-in">
+            <div className="bg-white border border-ink/10 rounded-lg p-6 sm:p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left side - Image */}
+                <div className="flex flex-col">
+                  <img
+                    src={SERVICES[selectedService].image}
+                    alt={SERVICES[selectedService].title}
+                    className="w-full h-64 sm:h-80 object-cover rounded-lg mb-4"
+                  />
+                </div>
+
+                {/* Right side - Details */}
+                <div>
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="bg-bronze text-ink font-heading font-bold text-2xl px-4 py-2 rounded-lg">
+                      0{selectedService + 1}
+                    </div>
+                    <div>
+                      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-ink">
+                        {SERVICES[selectedService].title}
+                      </h2>
+                    </div>
+                  </div>
+
+                  <p className="text-ink/70 leading-relaxed mb-6">
+                    {SERVICES[selectedService].description}
+                  </p>
+
+                  {/* Items List */}
+                  <div className="mb-6">
+                    <h4 className="font-heading font-bold text-ink mb-3">Services Include:</h4>
+                    <ul className="service-list text-ink/70 space-y-2">
+                      {SERVICES[selectedService].items.map((item) => (
+                        <li key={item} className="text-sm sm:text-base">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {SERVICES[selectedService].tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-block bg-ink/5 text-ink/70 text-xs font-mono px-3 py-1 rounded border border-ink/10"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export default function Home() {
+  const [featured, setFeatured] = useState([]);
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    client
+      .get("/api/gallery/", { params: { limit: 6 } })
+      .then(({ data }) => {
+        if (active) setFeatured(data.items);
+      })
+      .catch(() => {
+        if (active) setFeatured([]);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
@@ -82,109 +303,176 @@ export default function LandingHome() {
         description="Architectural & structural design, steel fabrication, glass & aluminium, and interior fittings — countrywide construction across Nairobi and upcountry Kenya."
       />
 
-      {/* ========== HERO SECTION ========== */}
-      <section className="relative bg-ink overflow-hidden min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-blueprint-grid opacity-5" />
+      {/* ---------------------------------------------------------- Hero */}
+      <section className="relative bg-ink overflow-hidden">
+        <div className="absolute inset-0 bg-blueprint-grid" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-ink/70 to-ink" />
 
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 w-full">
-          <div className="max-w-3xl">
-            <p className="font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-bronze-light mb-6 animate-fade-up">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
+          <div className="corner-ticks max-w-3xl py-2 animate-fade-up">
+            <p className="font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-bronze-light mb-6">
               Design • Build • Furnish — Kenya • Uganda • South Sudan
             </p>
-
-            <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-semibold text-plaster leading-tight mb-6 animate-fade-up">
+            <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-semibold text-plaster leading-[1.05]">
               We Build It.
               <br />
               We Fit It.
               <br />
               <span className="text-bronze-light">We Finish It.</span>
             </h1>
-
-            <p className="text-plaster/70 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl animate-fade-up">
-              Complete construction solutions from architectural design and steel fabrication to fully furnished interiors. One team. One roof. Across East Africa.
+            <p className="mt-6 text-plaster/70 text-base sm:text-lg max-w-2xl leading-relaxed">
+              From structural steel and aluminium & glass facades to fully furnished interiors — Rateng delivers construction and design under one roof, across East Africa.
             </p>
-
-            <div className="flex flex-wrap gap-4 animate-fade-up">
+            <div className="mt-9 flex flex-wrap gap-4">
               <Button to="/contact">
-                Get Started <FaArrowRight size={12} />
+                Request a Quote <FaArrowRight size={12} />
               </Button>
               <Button to="/portfolio" variant="outline">
-                View Our Work
+                See Our Projects
               </Button>
+            </div>
+            <div className="mt-8">
+              <RatingBadge dark />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ========== SERVICES SECTION ========== */}
-      <section className="bg-paper py-20 sm:py-28">
+      {/* ------------------------------------------------------ Stat Cards */}
+      <section className="bg-paper py-12 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          {/* Section Heading */}
-          <div className="mb-16">
-            <p className="font-mono text-xs uppercase tracking-widest text-bronze mb-4">What We Do</p>
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-ink mb-4">
-              Four Disciplines,
-              <br />
-              One Contractor
-            </h2>
-            <p className="text-ink/70 text-base max-w-2xl">
-              Every project draws on the same in-house team, so design, fabrication, and finishing stay coordinated.
-            </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+            <div className="text-center">
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">12+</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Years in Operation</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">200+</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Projects Completed</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">3</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Countries Served</p>
+            </div>
+            <div className="text-center">
+              <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">4</p>
+              <p className="font-mono text-xs sm:text-sm uppercase tracking-wider text-ink/60 leading-tight">Specialist Divisions</p>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Services Grid - Animated Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {SERVICES.map((service, idx) => (
-              <ServiceCard
-                key={service.key}
-                service={service}
-                idx={idx}
-                isDisplayed={displayedServices.includes(idx)}
+      {/* ------------------------------------------------------ Services */}
+      <ServiceCarousel />
+
+      {/* --------------------------------------------------- Featured work */}
+      {featured.length > 0 && (
+        <section className="bg-paper py-16 sm:py-28">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-12">
+              <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" description="A sample of the design-build, fabrication and fit-out work delivered across the region." />
+              <Link
+                to="/portfolio"
+                className="font-mono text-xs uppercase tracking-widest text-bronze-dark hover:text-ink inline-flex items-center gap-2 shrink-0"
+              >
+                View Full Portfolio <FaArrowRight size={11} />
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {featured.map((item) => (
+                <MediaCard key={item.id} item={item} type="image" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ----------------------------------------------- How We Work */}
+      <section className="bg-ink py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <SectionHeading
+            eyebrow="How We Work"
+            title="From first call to handover"
+            description="A straightforward process whether the job is a single steel gate or a full design-build contract."
+            dark
+          />
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {PROCESS_STEPS.map((step) => (
+              <div key={step.number} className="flex flex-col">
+                <div className="flex items-start gap-4 mb-4">
+                  <span className="font-heading text-4xl font-bold text-bronze">{step.number}</span>
+                </div>
+                <h3 className="font-heading text-lg text-plaster mb-2">{step.title}</h3>
+                <p className="text-sm text-plaster/70 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------- Why Us */}
+      <section className="bg-ink py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <SectionHeading
+            eyebrow="Why Rateng"
+            title="Built on craftsmanship and follow-through"
+            dark
+          />
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {WHY_US.map((item, idx) => {
+              const icons = [FaBuilding, FaGlobe, FaTools, FaCouch, FaPencilRuler, FaComments];
+              const IconComponent = icons[idx % icons.length];
+              return (
+                <div
+                  key={item.title}
+                  className="border border-plaster/15 rounded-lg p-6 bg-ink-light/40 hover:border-bronze/40 transition-colors"
+                >
+                  <IconComponent className="text-bronze mb-4" size={24} />
+                  <h3 className="font-heading text-lg text-plaster mb-2">{item.title}</h3>
+                  <p className="text-sm text-plaster/70 leading-relaxed">{item.body}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* --------------------------------------------------- Testimonials */}
+      <TestimonialsSection dark={false} />
+
+      {/* ---------------------------------------------------------- FAQ */}
+      <section className="bg-ink py-20 sm:py-28">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8">
+          <SectionHeading
+            eyebrow="Common Questions"
+            title="Frequently Asked Questions"
+            description="Get answers to common questions about our services, timelines, and service areas."
+            dark
+          />
+          <div className="mt-16 space-y-0">
+            {FAQS.map((item, i) => (
+              <FaqItem
+                key={item.question}
+                item={item}
+                isOpen={openFaqIndex === i}
+                onToggle={() => setOpenFaqIndex(openFaqIndex === i ? -1 : i)}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ========== STATS SECTION ========== */}
-      <section className="bg-ink py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-            <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">12+</p>
-              <p className="font-mono text-xs uppercase tracking-widest text-plaster/60">Years in Business</p>
-            </div>
-            <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">200+</p>
-              <p className="font-mono text-xs uppercase tracking-widest text-plaster/60">Projects Completed</p>
-            </div>
-            <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">3</p>
-              <p className="font-mono text-xs uppercase tracking-widest text-plaster/60">Countries Served</p>
-            </div>
-            <div className="text-center">
-              <p className="font-heading text-4xl sm:text-5xl text-bronze mb-2">4.9★</p>
-              <p className="font-mono text-xs uppercase tracking-widest text-plaster/60">Client Rating</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========== CTA SECTION ========== */}
-      <section className="bg-bronze py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 text-center">
-          <h2 className="font-heading text-3xl sm:text-4xl text-ink font-semibold mb-6">
-            Ready to Transform Your Space?
+      {/* ---------------------------------------------------------- CTA */}
+      <section className="bg-bronze">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <h2 className="font-heading text-2xl sm:text-3xl text-ink font-semibold">
+            Ready to start your project?
           </h2>
-          <p className="text-ink/80 text-base max-w-2xl mx-auto mb-8">
-            Let's discuss your project. From concept to completion, we handle every detail.
-          </p>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-ink text-plaster font-mono text-xs uppercase tracking-widest hover:bg-ink-light transition-colors rounded"
+            className="inline-flex items-center gap-2 px-7 py-3.5 bg-ink text-plaster font-mono text-xs uppercase tracking-widest hover:bg-ink-light transition-colors shrink-0"
           >
-            Contact Us Today <FaArrowRight size={12} />
+            Contact Us <FaArrowRight size={12} />
           </Link>
         </div>
       </section>
