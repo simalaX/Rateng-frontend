@@ -63,11 +63,11 @@
   }
 
   .service-card-luxury-title {
-    @apply font-serif text-lg sm:text-xl text-plaster font-light mb-3 leading-tight;
+    @apply font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight;
   }
 
   .service-card-luxury-description {
-    @apply text-plaster/60 text-sm leading-relaxed font-light;
+    @apply text-ink/70 text-sm leading-relaxed font-light;
   }
 
   /* ============================================================
