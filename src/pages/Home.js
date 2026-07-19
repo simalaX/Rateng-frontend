@@ -48,8 +48,12 @@ function FaqItem({ item, isOpen, onToggle }) {
 
 function ServicesGrid() {
   return (
-    <section className="bg-paper py-14 sm:py-20">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+    <section className="bg-paper py-14 sm:py-20 relative">
+      {/* Subtle background texture */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Cg fill=%22%23000%22 opacity=%220.05%22%3E%3Cpath d=%22M0 0h20v20H0zm40 0h20v20H40zm40 0h20v20H80M0 40h20v20H0zm40 0h20v20H40zm40 0h20v20H80M0 80h20v20H0zm40 0h20v20H40zm40 0h20v20H80%22/%3E%3C/g%3E%3C/svg%3E")'
+      }} />
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
         <SectionHeading
           eyebrow="What We Do"
           title="Four disciplines, one contractor"
@@ -61,13 +65,13 @@ function ServicesGrid() {
           {SERVICES.map((service, idx) => (
             <div
               key={service.key}
-              className="bg-white border border-ink/10 rounded-lg overflow-hidden flex flex-col"
+              className="bg-white border border-ink/10 rounded-lg overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
             >
               <div className="relative h-28 sm:h-40 overflow-hidden bg-ink/5">
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-2.5 left-2.5 bg-bronze text-ink font-heading font-bold text-xs px-2 py-0.5 rounded-full">
                   0{idx + 1}
@@ -117,8 +121,21 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- Hero */}
       <section className="relative bg-ink overflow-hidden">
-        <div className="absolute inset-0 bg-blueprint-grid" />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-ink/70 to-ink" />
+        {/* Background layers — construction/architecture themed */}
+        <div className="absolute inset-0 bg-blueprint-grid opacity-20" />
+
+        {/* Subtle construction/building background image overlay */}
+        <div
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&h=600&fit=crop")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/60 to-ink" />
 
         <div className="relative max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
           <div className="corner-ticks max-w-3xl py-2 animate-fade-up">
@@ -151,8 +168,11 @@ export default function Home() {
       </section>
 
       {/* ------------------------------------------------------ Stat Cards */}
-      <section className="bg-paper py-10 sm:py-16">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section className="bg-paper py-10 sm:py-16 relative">
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Cg fill=%22none%22 stroke=%22%23000%22 stroke-width=%220.5%22 opacity=%220.1%22%3E%3Cpath d=%22M0 0l200 200M200 0L0 200%22/%3E%3C/g%3E%3C/svg%3E")'
+        }} />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             <div className="text-center">
               <p className="font-heading text-3xl sm:text-4xl lg:text-5xl text-bronze mb-1 sm:mb-2">12+</p>
@@ -179,8 +199,13 @@ export default function Home() {
 
       {/* --------------------------------------------------- Featured work */}
       {featured.length > 0 && (
-        <section className="bg-paper py-14 sm:py-20">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <section className="bg-paper py-14 sm:py-20 relative">
+          <div className="absolute inset-0 opacity-15" style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1553531889-e6cf3d1c3884?w=1200&h=600&fit=crop")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }} />
+          <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-10">
               <SectionHeading eyebrow="Our Work" title="A portfolio built across borders" description="A sample of the design-build, fabrication and fit-out work delivered across the region." />
               <Link
@@ -200,8 +225,9 @@ export default function Home() {
       )}
 
       {/* ----------------------------------------------- How We Work */}
-      <section className="bg-ink py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section className="bg-ink py-14 sm:py-20 relative">
+        <div className="absolute inset-0 bg-blueprint-grid opacity-10" />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
           <SectionHeading
             eyebrow="How We Work"
             title="From first call to handover"
@@ -221,8 +247,11 @@ export default function Home() {
       </section>
 
       {/* -------------------------------------------------------- Why Us */}
-      <section className="bg-ink py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section className="bg-ink py-14 sm:py-20 relative">
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Ctext x=%2220%22 y=%2250%22 font-size=%2240%22 fill=%22%23fff%22 opacity=%220.1%22%3E♦%3C/text%3E%3C/svg%3E")'
+        }} />
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-8">
           <SectionHeading
             eyebrow="Why Rateng"
             title="Built on craftsmanship and follow-through"
