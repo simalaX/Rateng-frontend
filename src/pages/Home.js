@@ -48,31 +48,28 @@ function FaqItem({ item, isOpen, onToggle }) {
 
 function ServicesGrid() {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const gridRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+        if (entry.isIntersecting) {
           setIsVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    if (gridRef.current) {
+      observer.observe(gridRef.current);
     }
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, [isVisible]);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section ref={sectionRef} className="bg-paper py-32 sm:py-48 relative overflow-hidden">
+    <section className="bg-paper py-32 sm:py-48 relative overflow-hidden">
       {/* Subtle luxury background */}
       <div className="absolute inset-0" style={{
         backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(215, 180, 105, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(100, 90, 80, 0.01) 0%, transparent 50%)'
@@ -89,8 +86,8 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Service cards — Staggered animation on scroll */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Service cards — Staggered animation, triggers when THIS grid enters view */}
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {SERVICES.map((service, idx) => (
             <div
               key={service.key}
@@ -101,7 +98,7 @@ function ServicesGrid() {
                 transform: isVisible
                   ? 'translateY(0) translateX(0) scale(1)'
                   : 'translateY(60px) translateX(0) scale(0.9)',
-                transition: `all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 150}ms`,
+                transition: `all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 200}ms`,
               }}
             >
               <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
