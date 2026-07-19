@@ -70,7 +70,8 @@ function ServicesGrid() {
           {SERVICES.map((service, idx) => (
             <div
               key={service.key}
-              className="group flex flex-col cursor-pointer"
+              className="group flex flex-col cursor-pointer animate-fade-up opacity-0"
+              style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'forwards' }}
             >
               <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
                 <img

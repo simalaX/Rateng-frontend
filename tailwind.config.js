@@ -96,7 +96,7 @@ module.exports = {
         },
       },
       animation: {
-        "fade-up": "fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fade-in 0.9s ease-out both",
         "scroll": "scroll 10s linear infinite",
       },
