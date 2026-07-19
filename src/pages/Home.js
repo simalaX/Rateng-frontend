@@ -57,10 +57,10 @@ function ServicesGrid() {
       <div className="relative max-w-6xl mx-auto px-5 sm:px-8">
         <div className="mb-20 sm:mb-28">
           <p className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-bronze-light mb-6">Services</p>
-          <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl text-plaster font-light leading-tight mb-6">
+          <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl text-ink font-light leading-tight mb-6">
             Four disciplines.<br />One vision.
           </h2>
-          <p className="text-plaster/60 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
+          <p className="text-ink/70 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
             Every project draws on the same in-house team, ensuring design, fabrication, and finishing stay perfectly coordinated.
           </p>
         </div>
@@ -82,10 +82,10 @@ function ServicesGrid() {
                   {String(idx + 1).padStart(2, '0')}
                 </div>
               </div>
-              <h3 className="font-serif text-lg sm:text-xl text-plaster font-light mb-3 leading-tight">
+              <h3 className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight">
                 {service.title}
               </h3>
-              <p className="text-plaster/60 text-sm leading-relaxed font-light">
+              <p className="text-ink/70 text-sm leading-relaxed font-light">
                 {service.description}
               </p>
             </div>
