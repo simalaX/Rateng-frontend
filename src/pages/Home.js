@@ -49,7 +49,14 @@ function FaqItem({ item, isOpen, onToggle }) {
 function ServicesGrid() {
   const [selectedService, setSelectedService] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [slideDirection, setSlideDirection] = useState("right");
   const service = SERVICES[selectedService];
+
+  const handleSelectService = (idx) => {
+    setSlideDirection(idx > selectedService ? "right" : "left");
+    setSelectedService(idx);
+    setDetailsOpen(false);
+  };
 
   return (
     <section className="bg-paper py-14 sm:py-20">
@@ -66,10 +73,7 @@ function ServicesGrid() {
               <button
                 key={item.key}
                 type="button"
-                onClick={() => {
-                  setSelectedService(idx);
-                  setDetailsOpen(false);
-                }}
+                onClick={() => handleSelectService(idx)}
                 style={{ animationDelay: `${idx * 90}ms` }}
                 className={`service-tab flex-shrink-0 rounded-full border px-4 py-2 text-xs uppercase tracking-widest transition ${selectedService === idx
                   ? "bg-bronze text-ink border-bronze"
@@ -81,7 +85,11 @@ function ServicesGrid() {
             ))}
           </div>
 
-          <div key={service.key} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] items-stretch animate-service-pop">
+          <div
+            key={`${service.key}-${slideDirection}`}
+            className={`grid gap-6 lg:grid-cols-[1.05fr_0.95fr] items-stretch ${slideDirection === "right" ? "animate-slide-right" : "animate-slide-left"
+              }`}
+          >
             <div className="overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-sm">
               <div className="relative h-72 sm:h-96">
                 <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
