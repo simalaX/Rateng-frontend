@@ -53,11 +53,11 @@ function ServicesGrid() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isVisible) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -69,7 +69,7 @@ function ServicesGrid() {
         observer.unobserve(sectionRef.current);
       }
     };
-  }, []);
+  }, [isVisible]);
 
   return (
     <section ref={sectionRef} className="bg-paper py-32 sm:py-48 relative overflow-hidden">
@@ -89,16 +89,19 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Service cards — with staggered bounce animation */}
+        {/* Service cards — Staggered animation on scroll */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {SERVICES.map((service, idx) => (
             <div
               key={service.key}
               className="group flex flex-col cursor-pointer"
               style={{
+                willChange: 'transform, opacity',
                 opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.95)',
-                transition: `all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 120}ms`,
+                transform: isVisible
+                  ? 'translateY(0) translateX(0) scale(1)'
+                  : 'translateY(60px) translateX(0) scale(0.9)',
+                transition: `all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 150}ms`,
               }}
             >
               <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
