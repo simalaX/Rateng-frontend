@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaChevronDown } from "react-icons/fa";
 import client from "../api/client";
@@ -47,8 +47,32 @@ function FaqItem({ item, isOpen, onToggle }) {
 }
 
 function ServicesGrid() {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <section className="bg-paper py-32 sm:py-48 relative overflow-hidden">
+    <section ref={sectionRef} className="bg-paper py-32 sm:py-48 relative overflow-hidden">
       {/* Subtle luxury background */}
       <div className="absolute inset-0" style={{
         backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(215, 180, 105, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(100, 90, 80, 0.01) 0%, transparent 50%)'
@@ -65,13 +89,17 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Service cards — clean, minimal */}
+        {/* Service cards — with staggered bounce animation */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {SERVICES.map((service, idx) => (
             <div
               key={service.key}
-              className="group flex flex-col cursor-pointer animate-fade-up opacity-0"
-              style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'forwards' }}
+              className="group flex flex-col cursor-pointer"
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.95)',
+                transition: `all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 120}ms`,
+              }}
             >
               <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
                 <img
