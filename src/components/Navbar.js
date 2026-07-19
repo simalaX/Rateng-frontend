@@ -51,11 +51,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           {/* Logo + Brand Name */}
           <NavLink to="/" className="flex items-center gap-4 shrink-0">
-            <img
-              src="/rateng.png"
-              alt="Rateng"
-              className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
-            />
+            <div className="flex h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full bg-ink/5 p-3 shadow-soft">
+              <img
+                src="/rateng.png"
+                alt="Rateng"
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
             <div className="flex flex-col justify-center">
               <span className="font-serif text-base sm:text-lg text-ink font-light leading-tight">
                 {COMPANY.shortName}
