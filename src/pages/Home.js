@@ -7,6 +7,7 @@ import SectionHeading from "../components/SectionHeading";
 import RatingBadge from "../components/RatingBadge";
 import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
+import CallPopup from "../components/CallPopup";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 function Button({ to, children, variant = "solid" }) {
@@ -118,6 +119,7 @@ export default function Home() {
 
   return (
     <>
+      <CallPopup />
       <SEO
         title={undefined}
         description="Architectural & structural design, steel fabrication, glass & aluminium, and interior fittings — countrywide construction across Nairobi and upcountry Kenya."
