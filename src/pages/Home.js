@@ -309,7 +309,21 @@ export default function Home() {
     client
       .get("/api/gallery/", { params: { limit: 6 } })
       .then(({ data }) => {
-        if (active) setFeatured(data.items);
+        if (active) {
+          setFeatured(data.items);
+          // Log items for debugging video detection
+          console.log('Portfolio items loaded:', data.items);
+          data.items.forEach((item, idx) => {
+            console.log(`Item ${idx}:`, {
+              type: item.type,
+              media_type: item.media_type,
+              url: item.url,
+              file_url: item.file_url,
+              mime_type: item.mime_type,
+              title: item.title,
+            });
+          });
+        }
       })
       .catch(() => {
         if (active) setFeatured([]);
@@ -319,16 +333,37 @@ export default function Home() {
     };
   }, []);
 
-  // Filter featured items based on selected filter - improved video detection
+  // Filter featured items based on selected filter - comprehensive video detection
   const filteredFeatured = featured.filter((item) => {
     if (portfolioFilter === 'all') return true;
 
-    // Check if item is a video by multiple methods
+    // More comprehensive video detection - check all possible properties
     const isVideo =
+      // Direct type checks
       item.type === 'video' ||
-      item.mime_type?.includes('video') ||
-      item.url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv)$/i) ||
-      item.media_type === 'video';
+      item.media_type === 'video' ||
+      item.contentType === 'video' ||
+      item.category === 'video' ||
+      item.kind === 'video' ||
+
+      // MIME type checks
+      item.mime_type?.toLowerCase().includes('video') ||
+      item.mimeType?.toLowerCase().includes('video') ||
+      item.content_type?.toLowerCase().includes('video') ||
+
+      // URL/file extension checks - check both url and file_url
+      item.url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+      item.file_url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+      item.path?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+      item.filepath?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+
+      // Filename checks
+      item.name?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+      item.filename?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
+
+      // Check if title indicates video
+      item.title?.toLowerCase().includes('video') ||
+      item.title?.toLowerCase().includes('film');
 
     if (portfolioFilter === 'photos') return !isVideo;
     if (portfolioFilter === 'videos') return isVideo;
