@@ -307,7 +307,7 @@ export default function Home() {
   useEffect(() => {
     let active = true;
     client
-      .get("/api/gallery/", { params: { limit: 6 } })
+      .get("/api/gallery/")
       .then(({ data }) => {
         if (active) {
           setFeatured(data.items);
@@ -485,8 +485,8 @@ export default function Home() {
                 <button
                   onClick={() => setPortfolioFilter('all')}
                   className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'all'
-                      ? 'text-ink border-bronze'
-                      : 'text-ink/60 border-transparent hover:text-ink'
+                    ? 'text-ink border-bronze'
+                    : 'text-ink/60 border-transparent hover:text-ink'
                     }`}
                 >
                   All
@@ -494,8 +494,8 @@ export default function Home() {
                 <button
                   onClick={() => setPortfolioFilter('photos')}
                   className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'photos'
-                      ? 'text-ink border-bronze'
-                      : 'text-ink/60 border-transparent hover:text-ink'
+                    ? 'text-ink border-bronze'
+                    : 'text-ink/60 border-transparent hover:text-ink'
                     }`}
                 >
                   Photos
@@ -503,8 +503,8 @@ export default function Home() {
                 <button
                   onClick={() => setPortfolioFilter('videos')}
                   className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'videos'
-                      ? 'text-ink border-bronze'
-                      : 'text-ink/60 border-transparent hover:text-ink'
+                    ? 'text-ink border-bronze'
+                    : 'text-ink/60 border-transparent hover:text-ink'
                     }`}
                 >
                   Videos
