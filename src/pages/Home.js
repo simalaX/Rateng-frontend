@@ -311,15 +311,27 @@ export default function Home() {
       .then(({ data }) => {
         if (active) {
           setFeatured(data.items);
-          // Log items for debugging video detection
+          // Extended logging to see ALL properties
+          console.log('Full Portfolio Response:', data);
           console.log('Portfolio items loaded:', data.items);
           data.items.forEach((item, idx) => {
-            console.log(`Item ${idx}:`, {
+            console.log(`========== ITEM ${idx} ==========`);
+            console.log('ALL PROPERTIES:', item);
+            console.log('Checked fields:', {
               type: item.type,
               media_type: item.media_type,
+              contentType: item.contentType,
+              category: item.category,
+              kind: item.kind,
               url: item.url,
               file_url: item.file_url,
+              path: item.path,
+              filepath: item.filepath,
               mime_type: item.mime_type,
+              mimeType: item.mimeType,
+              content_type: item.content_type,
+              name: item.name,
+              filename: item.filename,
               title: item.title,
             });
           });
@@ -514,7 +526,7 @@ export default function Home() {
           </div>
 
           {featured.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-8">
               {filteredFeatured.length > 0 ? (
                 filteredFeatured.map((item) => (
                   <MediaCard key={item.id} item={item} type={item.type || 'image'} />
