@@ -319,11 +319,19 @@ export default function Home() {
     };
   }, []);
 
-  // Filter featured items based on selected filter
+  // Filter featured items based on selected filter - improved video detection
   const filteredFeatured = featured.filter((item) => {
     if (portfolioFilter === 'all') return true;
-    if (portfolioFilter === 'photos') return item.type === 'image' || !item.type;
-    if (portfolioFilter === 'videos') return item.type === 'video';
+
+    // Check if item is a video by multiple methods
+    const isVideo =
+      item.type === 'video' ||
+      item.mime_type?.includes('video') ||
+      item.url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv)$/i) ||
+      item.media_type === 'video';
+
+    if (portfolioFilter === 'photos') return !isVideo;
+    if (portfolioFilter === 'videos') return isVideo;
     return true;
   });
 
@@ -415,30 +423,30 @@ export default function Home() {
       <ServicesGrid />
 
       {/* --------------------------------------------------- Featured work */}
-      {featured.length > 0 && (
-        <section className="bg-paper py-32 sm:py-48">
-          <div className="max-w-6xl mx-auto px-5 sm:px-8">
-            <div className="mb-20 sm:mb-28">
-              <p className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-bronze-light mb-6">Portfolio</p>
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-12">
-                <div>
-                  <h2 className="font-serif text-5xl sm:text-6xl text-ink font-light mb-6 leading-tight">
-                    Built across borders
-                  </h2>
-                  <p className="text-ink/60 text-base font-light max-w-xl">
-                    A selection of design-build, fabrication and fit-out work delivered across Kenya, Uganda, and South Sudan.
-                  </p>
-                </div>
-                <Link
-                  to="/portfolio"
-                  className="font-mono text-xs uppercase tracking-[0.15em] text-bronze-dark hover:text-ink transition-colors flex items-center gap-3 shrink-0"
-                >
-                  Explore All <FaArrowRight size={11} />
-                </Link>
+      <section className="bg-paper py-32 sm:py-48">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="mb-20 sm:mb-28">
+            <p className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-bronze-light mb-6">Portfolio</p>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-12">
+              <div>
+                <h2 className="font-serif text-5xl sm:text-6xl text-ink font-light mb-6 leading-tight">
+                  Built across borders
+                </h2>
+                <p className="text-ink/60 text-base font-light max-w-xl">
+                  A selection of design-build, fabrication and fit-out work delivered across Kenya, Uganda, and South Sudan.
+                </p>
               </div>
+              <Link
+                to="/portfolio"
+                className="font-mono text-xs uppercase tracking-[0.15em] text-bronze-dark hover:text-ink transition-colors flex items-center gap-3 shrink-0"
+              >
+                Explore All <FaArrowRight size={11} />
+              </Link>
+            </div>
 
-              {/* Portfolio Filter Tabs */}
-              <div className="flex gap-6 mb-12">
+            {/* Portfolio Filter Tabs */}
+            {featured.length > 0 && (
+              <div className="flex gap-6 mb-12 border-b border-plaster/20 pb-4">
                 <button
                   onClick={() => setPortfolioFilter('all')}
                   className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'all'
@@ -467,16 +475,28 @@ export default function Home() {
                   Videos
                 </button>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-8">
-              {filteredFeatured.map((item) => (
-                <MediaCard key={item.id} item={item} type={item.type || 'image'} />
-              ))}
-            </div>
+            )}
           </div>
-        </section>
-      )}
+
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {filteredFeatured.length > 0 ? (
+                filteredFeatured.map((item) => (
+                  <MediaCard key={item.id} item={item} type={item.type || 'image'} />
+                ))
+              ) : (
+                <p className="text-ink/60 text-base font-light col-span-full text-center py-12">
+                  No {portfolioFilter} found.
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="text-ink/60 text-base font-light text-center py-12">
+              Loading portfolio...
+            </p>
+          )}
+        </div>
+      </section>
 
       {/* ----------------------------------------------- How We Work */}
       <section className="bg-ink py-32 sm:py-48 relative">
