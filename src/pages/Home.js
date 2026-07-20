@@ -302,6 +302,7 @@ function ServicesGrid() {
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const [portfolioFilter, setPortfolioFilter] = useState('all'); // 'all', 'photos', 'videos'
 
   useEffect(() => {
     let active = true;
@@ -317,6 +318,14 @@ export default function Home() {
       active = false;
     };
   }, []);
+
+  // Filter featured items based on selected filter
+  const filteredFeatured = featured.filter((item) => {
+    if (portfolioFilter === 'all') return true;
+    if (portfolioFilter === 'photos') return item.type === 'image' || !item.type;
+    if (portfolioFilter === 'videos') return item.type === 'video';
+    return true;
+  });
 
   return (
     <>
@@ -411,7 +420,7 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-5 sm:px-8">
             <div className="mb-20 sm:mb-28">
               <p className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-bronze-light mb-6">Portfolio</p>
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 mb-12">
                 <div>
                   <h2 className="font-serif text-5xl sm:text-6xl text-ink font-light mb-6 leading-tight">
                     Built across borders
@@ -427,10 +436,42 @@ export default function Home() {
                   Explore All <FaArrowRight size={11} />
                 </Link>
               </div>
+
+              {/* Portfolio Filter Tabs */}
+              <div className="flex gap-6 mb-12">
+                <button
+                  onClick={() => setPortfolioFilter('all')}
+                  className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'all'
+                      ? 'text-ink border-bronze'
+                      : 'text-ink/60 border-transparent hover:text-ink'
+                    }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setPortfolioFilter('photos')}
+                  className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'photos'
+                      ? 'text-ink border-bronze'
+                      : 'text-ink/60 border-transparent hover:text-ink'
+                    }`}
+                >
+                  Photos
+                </button>
+                <button
+                  onClick={() => setPortfolioFilter('videos')}
+                  className={`font-mono text-xs uppercase tracking-[0.15em] pb-3 border-b-2 transition-all ${portfolioFilter === 'videos'
+                      ? 'text-ink border-bronze'
+                      : 'text-ink/60 border-transparent hover:text-ink'
+                    }`}
+                >
+                  Videos
+                </button>
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featured.map((item) => (
-                <MediaCard key={item.id} item={item} type="image" />
+
+            <div className="grid grid-cols-2 gap-8">
+              {filteredFeatured.map((item) => (
+                <MediaCard key={item.id} item={item} type={item.type || 'image'} />
               ))}
             </div>
           </div>
