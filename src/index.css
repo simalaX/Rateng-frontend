@@ -1,239 +1,211 @@
-/* ============================================================
-   GLOBAL STYLES + LUXURY DESIGN SYSTEM
-   Add this to your existing globals.css
-   ============================================================ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 1. IMPORT LUXURY SERIF FONT */
+/* Luxury serif font, used by the .font-serif utility below */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-heading;
+}
+
+/* Visible keyboard focus everywhere, regardless of what's focused */
+:focus-visible {
+  outline: 2px solid theme("colors.bronze.DEFAULT");
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Blueprint grid background used behind the hero and a few dark sections */
+.bg-blueprint-grid {
+  background-image:
+    linear-gradient(rgba(173, 131, 72, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 131, 72, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Drafting-style square bullets for service lists, replacing default discs */
+.service-list {
+  list-style: none;
+  padding: 0;
+}
+.service-list li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+.service-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background-color: theme("colors.bronze.DEFAULT");
+}
+
+/* Registration-mark corner ticks, used sparingly as a signature motif */
+.corner-ticks {
+  position: relative;
+}
+.corner-ticks::before,
+.corner-ticks::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: theme("colors.bronze.DEFAULT");
+  opacity: 0.6;
+}
+.corner-ticks::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.corner-ticks::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Consistent, squared-off form field styling across the site */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+  @apply bg-white border border-ink/15 rounded-none px-4 py-3 text-ink placeholder:text-ink/40 focus:border-bronze transition-colors;
+}
+
+/* FAQ styling for better visibility and animation */
+.faq-button {
+  @apply w-full flex items-start justify-between gap-4 py-6 px-1 text-left hover:bg-ink-light/20 transition-colors;
+}
+
+.faq-answer {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ============================================================
-   2. LUXURY COMPONENT UTILITIES
+   LUXURY DESIGN SYSTEM
+   Layered on top of the base styles above for the redesigned
+   homepage (serif headings, generous spacing, premium shadows).
+   Existing classes above (blueprint grid, service-list, corner
+   ticks, form fields, FAQ) are untouched — other pages still use
+   them.
    ============================================================ */
 
 @layer components {
-
-  /* Premium Button */
   .btn-luxury {
     @apply px-8 py-4 font-mono text-xs uppercase tracking-premium transition-all duration-300 rounded-sm border border-plaster/60;
   }
-
   .btn-luxury:hover {
     @apply border-plaster bg-plaster/8 shadow-premium;
   }
 
-  /* Luxury Card */
   .card-luxury {
     @apply bg-white border border-ink/8 rounded-sm p-6 sm:p-8 shadow-sm;
   }
 
-  /* Luxury Section (Generous Padding) */
   .section-luxury {
     @apply py-32 sm:py-48;
   }
 
-  /* Luxury Heading */
   .heading-luxury {
     @apply font-serif font-light leading-tight tracking-ultra;
   }
 
-  /* Luxury Supporting Text */
   .text-luxury {
     @apply font-light leading-relaxed tracking-wider;
   }
 
-  /* Luxury Border (Hairline) */
   .border-luxury {
     @apply border-0.5 border-ink/8;
   }
 
-  /* Luxury Service Card */
   .service-card-luxury {
     @apply group flex flex-col cursor-pointer transition-all duration-300;
   }
-
   .service-card-luxury-image {
     @apply relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all group-hover:border-plaster/30;
   }
-
   .service-card-luxury-image img {
     @apply w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-110;
   }
-
   .service-card-luxury-title {
     @apply font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight;
   }
-
   .service-card-luxury-description {
     @apply text-ink/70 text-sm leading-relaxed font-light;
   }
 
-  /* ============================================================
-     LUXURY OPACITY HIERARCHY (Text Colors)
-     Use these classes for semantic text contrast
-     ============================================================ */
+  .text-primary { @apply text-ink; }
+  .text-secondary { @apply text-ink/80; }
+  .text-supporting { @apply text-ink/70; }
+  .text-muted { @apply text-ink/60; }
+  .text-hint { @apply text-ink/50; }
+  .text-subtle { @apply text-ink/30; }
 
-  .text-primary {
-    @apply text-ink;
-    /* 100% — main text */
-  }
+  .transition-luxury { @apply transition-all duration-300; }
+  .hover-luxury { @apply hover:shadow-premium hover:border-plaster/40 transition-all duration-300; }
 
-  .text-secondary {
-    @apply text-ink/80;
-    /* 80% — secondary text */
-  }
+  .font-serif-light { @apply font-serif font-light; }
+  .font-serif-normal { @apply font-serif font-normal; }
 
-  .text-supporting {
-    @apply text-ink/70;
-    /* 70% — supporting copy */
-  }
+  .heading-1-luxury { @apply font-serif-light text-7xl sm:text-8xl leading-[1.1] tracking-ultra; }
+  .heading-2-luxury { @apply font-serif-light text-5xl sm:text-6xl leading-tight tracking-wide; }
+  .heading-3-luxury { @apply font-serif-light text-2xl sm:text-3xl leading-snug tracking-wide; }
+  .body-luxury { @apply font-light text-base sm:text-lg leading-relaxed; }
+  .caption-luxury { @apply font-mono text-xs uppercase tracking-ultra text-ink/50; }
 
-  .text-muted {
-    @apply text-ink/60;
-    /* 60% — captions, labels */
-  }
-
-  .text-hint {
-    @apply text-ink/50;
-    /* 50% — hints, metadata */
-  }
-
-  .text-subtle {
-    @apply text-ink/30;
-    /* 30% — very subtle */
-  }
-
-  /* ============================================================
-     LUXURY ANIMATIONS
-     ============================================================ */
-
-  .transition-luxury {
-    @apply transition-all duration-300;
-  }
-
-  .hover-luxury {
-    @apply hover:shadow-premium hover:border-plaster/40 transition-all duration-300;
-  }
-
-  /* ============================================================
-     LUXURY TYPOGRAPHY UTILITIES
-     ============================================================ */
-
-  .font-serif-light {
-    @apply font-serif font-light;
-  }
-
-  .font-serif-normal {
-    @apply font-serif font-normal;
-  }
-
-  .heading-1-luxury {
-    @apply font-serif-light text-7xl sm:text-8xl leading-[1.1] tracking-ultra;
-  }
-
-  .heading-2-luxury {
-    @apply font-serif-light text-5xl sm:text-6xl leading-tight tracking-wide;
-  }
-
-  .heading-3-luxury {
-    @apply font-serif-light text-2xl sm:text-3xl leading-snug tracking-wide;
-  }
-
-  .body-luxury {
-    @apply font-light text-base sm:text-lg leading-relaxed;
-  }
-
-  .caption-luxury {
-    @apply font-mono text-xs uppercase tracking-ultra text-ink/50;
-  }
+  .focus-luxury { @apply focus:outline-none focus:ring-2 focus:ring-bronze focus:ring-offset-2; }
 }
 
-/* ============================================================
-   3. GLOBAL BASE STYLES
-   ============================================================ */
-
+/* Luxury pages use serif, light-weight headings — this overrides
+   the font-heading rule above for h1-h4 (later in the cascade wins)
+   and extends the same treatment to h5/h6. */
 @layer base {
-
-  /* Headings default to serif + light (luxury) */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-light;
   }
-
-  /* Body text defaults to light weight */
   body {
     @apply font-light;
   }
-
-  /* Links get transition */
   a {
     @apply transition-colors duration-300;
   }
-
-  /* Ensure smooth rendering */
-  html {
-    @apply scroll-smooth;
-  }
 }
-
-/* ============================================================
-   4. FOCUS STATES (Accessibility)
-   ============================================================ */
-
-@layer components {
-  .focus-luxury {
-    @apply focus:outline-none focus:ring-2 focus:ring-bronze focus:ring-offset-2;
-  }
-}
-
-/* ============================================================
-   5. QUICK REFERENCE FOR DEVELOPERS
-   
-   LUXURY COMPONENT CLASSES:
-   
-   .btn-luxury              → Ghost button (premium style)
-   .card-luxury             → Minimal card with subtle shadow
-   .section-luxury          → Generous section padding (py-32 sm:py-48)
-   .heading-luxury          → Serif + light + generous tracking
-   .text-luxury             → Light body text with relaxed leading
-   .border-luxury           → Hairline border (0.5px, ink/8)
-   
-   .heading-1-luxury        → H1 size with luxury treatment
-   .heading-2-luxury        → H2 size with luxury treatment
-   .heading-3-luxury        → H3 size with luxury treatment
-   .body-luxury             → Body text size with luxury treatment
-   .caption-luxury          → Caption/label with premium mono
-   
-   TEXT HIERARCHY:
-   
-   .text-primary            → Main text (100%)
-   .text-secondary          → Secondary (80%)
-   .text-supporting         → Supporting (70%)
-   .text-muted              → Captions (60%)
-   .text-hint               → Hints (50%)
-   .text-subtle             → Very light (30%)
-   
-   BUILT-IN TAILWIND UTILITIES (use directly):
-   
-   .line-clamp-2            → Clamp text to 2 lines
-   .line-clamp-3            → Clamp text to 3 lines
-   .truncate                → Single-line truncation
-   
-   CUSTOM UTILITIES:
-   
-   font-serif               → Playfair Display (luxury headings)
-   tracking-premium         → 0.15em (buttons)
-   tracking-ultra           → 0.2em (headings)
-   py-32, py-48             → Generous spacing
-   gap-8, gap-12            → Large grid gaps
-   border-0.5               → Hairline borders
-   shadow-premium           → Subtle luxury shadow
-   transition-luxury        → 300ms smooth transition
-   
-   ============================================================ */

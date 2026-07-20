@@ -9,6 +9,71 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
+// Fire blaze styles
+const fireStyles = `
+@keyframes fireBlaze {
+  0% {
+    background-position: 200% center;
+    opacity: 0;
+    filter: blur(2px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    background-position: -200% center;
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes fireBurn {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.fire-text {
+  background: linear-gradient(90deg, 
+    #ff6b1b 0%,
+    #ff8c1b 25%,
+    #ffa500 50%,
+    #ff8c1b 75%,
+    #ff6b1b 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 107, 27, 0.5);
+  filter: drop-shadow(0 0 15px rgba(255, 107, 27, 0.6)) drop-shadow(0 0 25px rgba(255, 165, 0, 0.3));
+}
+
+.fire-text--animated {
+  animation: fireBurn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             fireBlaze 1.2s ease-in-out forwards;
+}
+
+.fire-text--delay-1 {
+  animation-delay: 0s;
+}
+
+.fire-text--delay-2 {
+  animation-delay: 0.3s;
+}
+
+.fire-text--delay-3 {
+  animation-delay: 0.6s;
+}
+
+.fire-text--delay-location {
+  animation-delay: 1.2s;
+}
+`;
+
 function Button({ to, children, variant = "solid" }) {
   const base = "inline-flex items-center gap-3 px-8 py-4 font-mono text-xs uppercase tracking-[0.15em] transition-all duration-300";
   const styles =
@@ -146,6 +211,7 @@ export default function Home() {
 
   return (
     <>
+      <style>{fireStyles}</style>
       <SEO
         title={undefined}
         description="Architectural & structural design, steel fabrication, glass & aluminium, and interior fittings — countrywide construction across Nairobi and upcountry Kenya."
@@ -175,15 +241,15 @@ export default function Home() {
 
         <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-40 pb-32 sm:pt-56 sm:pb-48">
           <div className="max-w-3xl">
-            <p className="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase text-bronze-light mb-10 block">
+            <p className={`font-mono text-xs sm:text-sm tracking-[0.2em] uppercase fire-text fire-text--animated fire-text--delay-location mb-10 block`}>
               Kenya • Uganda • South Sudan
             </p>
-            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl font-light text-plaster leading-[1.1] mb-10">
-              We build,
+            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl font-light leading-[1.1] mb-10">
+              <span className="block fire-text fire-text--animated fire-text--delay-1">We Build,</span>
               <br />
-              we craft,
+              <span className="block fire-text fire-text--animated fire-text--delay-2">We Design,</span>
               <br />
-              <span className="text-bronze-light">we finish.</span>
+              <span className="block fire-text fire-text--animated fire-text--delay-3">we furnish.</span>
             </h1>
             <p className="text-plaster/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-light mb-12">
               From structural steel and glass facades to fully furnished interiors. One team. One point of contact. Every project, end to end.
