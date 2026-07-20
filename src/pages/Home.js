@@ -36,6 +36,35 @@ const fireStyles = `
   }
 }
 
+@keyframes serviceSlideInSequence {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes fireBurnSequential {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  80% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
 .fire-text {
   background: linear-gradient(90deg, 
     #ff6b1b 0%,
@@ -57,20 +86,24 @@ const fireStyles = `
              fireBlaze 1.2s ease-in-out forwards;
 }
 
-.fire-text--delay-1 {
+.fire-text--hero-delay-1 {
   animation-delay: 0s;
 }
 
-.fire-text--delay-2 {
+.fire-text--hero-delay-2 {
   animation-delay: 0.3s;
 }
 
-.fire-text--delay-3 {
+.fire-text--hero-delay-3 {
   animation-delay: 0.6s;
 }
 
 .fire-text--delay-location {
   animation-delay: 1.2s;
+}
+
+.service-title--fire {
+  display: inline-block;
 }
 `;
 
@@ -151,39 +184,47 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Service cards — Staggered animation, triggers when THIS grid enters view */}
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SERVICES.map((service, idx) => (
-            <div
-              key={service.key}
-              className="group flex flex-col cursor-pointer"
-              style={{
-                willChange: 'transform, opacity',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible
-                  ? 'translateY(0) translateX(0) scale(1)'
-                  : 'translateY(60px) translateX(0) scale(0.9)',
-                transition: `all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${idx * 200}ms`,
-              }}
-            >
-              <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                />
-                <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
-                  {String(idx + 1).padStart(2, '0')}
+        {/* Sequential Service Slide-In Animation */}
+        <div ref={gridRef} className="relative min-h-96 overflow-hidden">
+          {SERVICES.map((service, idx) => {
+            const totalDuration = SERVICES.length * 3.5; // Each service gets 3.5s (1.2s slide + 2.3s pause)
+            const startTime = idx * 3.5;
+
+            return (
+              <div
+                key={service.key}
+                style={{
+                  animation: isVisible ? `serviceSlideInSequence 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) ${startTime}s forwards` : 'none',
+                  position: 'absolute',
+                  width: '100%',
+                }}
+              >
+                <div className="group flex flex-col">
+                  <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                    />
+                    <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
+                      {String(idx + 1).padStart(2, '0')}
+                    </div>
+                  </div>
+                  <h3
+                    className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight service-title--fire"
+                    style={{
+                      animation: isVisible ? `fireBurnSequential 1s cubic-bezier(0.34, 1.56, 0.64, 1) ${startTime}s forwards` : 'none'
+                    }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p className="text-ink/70 text-sm leading-relaxed font-light">
+                    {service.description}
+                  </p>
                 </div>
               </div>
-              <h3 className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight">
-                {service.title}
-              </h3>
-              <p className="text-ink/70 text-sm leading-relaxed font-light">
-                {service.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -245,11 +286,11 @@ export default function Home() {
               Kenya • Uganda • South Sudan
             </p>
             <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl font-light leading-[1.1] mb-10">
-              <span className="block fire-text fire-text--animated fire-text--delay-1">We Build,</span>
+              <span className="block fire-text fire-text--animated fire-text--hero-delay-1">We Build,</span>
               <br />
-              <span className="block fire-text fire-text--animated fire-text--delay-2">We Design,</span>
+              <span className="block fire-text fire-text--animated fire-text--hero-delay-2">We Design,</span>
               <br />
-              <span className="block fire-text fire-text--animated fire-text--delay-3">we furnish.</span>
+              <span className="block fire-text fire-text--animated fire-text--hero-delay-3">we furnish.</span>
             </h1>
             <p className="text-plaster/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-light mb-12">
               From structural steel and glass facades to fully furnished interiors. One team. One point of contact. Every project, end to end.
