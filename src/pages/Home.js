@@ -56,12 +56,21 @@ const fireStyles = `
 @keyframes fireBurnSequential {
   0% {
     clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
   }
   80% {
     clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
   }
   100% {
     clip-path: inset(0 0 0 100%);
+    opacity: 0;
   }
 }
 
@@ -104,6 +113,19 @@ const fireStyles = `
 
 .service-title--fire {
   display: inline-block;
+  background: linear-gradient(90deg, 
+    #ff6b1b 0%,
+    #ff8c1b 25%,
+    #ffa500 50%,
+    #ff8c1b 75%,
+    #ff6b1b 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 107, 27, 0.5);
+  filter: drop-shadow(0 0 15px rgba(255, 107, 27, 0.6)) drop-shadow(0 0 25px rgba(255, 165, 0, 0.3));
 }
 `;
 
@@ -166,6 +188,8 @@ function ServicesGrid() {
     return () => observer.disconnect();
   }, []);
 
+  const totalDuration = SERVICES.length * 3.5; // Total time for all services (each gets 3.5s)
+
   return (
     <section className="bg-paper py-32 sm:py-48 relative overflow-hidden">
       {/* Subtle luxury background */}
@@ -184,47 +208,91 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Sequential Service Slide-In Animation */}
-        <div ref={gridRef} className="relative min-h-96 overflow-hidden">
-          {SERVICES.map((service, idx) => {
-            const totalDuration = SERVICES.length * 3.5; // Each service gets 3.5s (1.2s slide + 2.3s pause)
-            const startTime = idx * 3.5;
+        {/* Sequential Service Slide-In Animation - Infinite Loop */}
+        <style>{`
+          ${SERVICES.map((service, idx) => {
+          const startTime = idx * 3.5;
+          return `
+              @keyframes serviceSlide${idx} {
+                0%, ${(startTime / totalDuration) * 100}% {
+                  transform: translateX(-100%);
+                  opacity: 0;
+                }
+                ${((startTime + 0.15) / totalDuration) * 100}% {
+                  opacity: 1;
+                }
+                ${((startTime + 1.2) / totalDuration) * 100}%, ${((startTime + 2.3) / totalDuration) * 100}% {
+                  transform: translateX(0);
+                  opacity: 1;
+                }
+                ${((startTime + 3.5) / totalDuration) * 100}% {
+                  transform: translateX(100%);
+                  opacity: 0;
+                }
+                100% {
+                  transform: translateX(100%);
+                  opacity: 0;
+                }
+              }
 
-            return (
-              <div
-                key={service.key}
-                style={{
-                  animation: isVisible ? `serviceSlideInSequence 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) ${startTime}s forwards` : 'none',
-                  position: 'absolute',
-                  width: '100%',
-                }}
-              >
-                <div className="group flex flex-col">
-                  <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                    />
-                    <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
-                      {String(idx + 1).padStart(2, '0')}
-                    </div>
+              @keyframes fireBurn${idx} {
+                0%, ${(startTime / totalDuration) * 100}% {
+                  clip-path: inset(0 100% 0 0);
+                }
+                ${((startTime + 0.15) / totalDuration) * 100}% {
+                  clip-path: inset(0 100% 0 0);
+                }
+                ${((startTime + 1.0) / totalDuration) * 100}%, ${((startTime + 2.0) / totalDuration) * 100}% {
+                  clip-path: inset(0 0 0 0);
+                }
+                ${((startTime + 3.5) / totalDuration) * 100}% {
+                  clip-path: inset(0 0 0 100%);
+                }
+                100% {
+                  clip-path: inset(0 0 0 100%);
+                }
+              }
+            `;
+        }).join('')}
+        `}</style>
+
+        <div ref={gridRef} className="relative min-h-96 overflow-hidden">
+          {SERVICES.map((service, idx) => (
+            <div
+              key={service.key}
+              style={{
+                animation: isVisible ? `serviceSlide${idx} ${totalDuration}s linear infinite` : 'none',
+                position: 'absolute',
+                width: '100%',
+                top: 0,
+                left: 0,
+              }}
+            >
+              <div className="group flex flex-col">
+                <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                  />
+                  <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
+                    {String(idx + 1).padStart(2, '0')}
                   </div>
-                  <h3
-                    className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight service-title--fire"
-                    style={{
-                      animation: isVisible ? `fireBurnSequential 1s cubic-bezier(0.34, 1.56, 0.64, 1) ${startTime}s forwards` : 'none'
-                    }}
-                  >
-                    {service.title}
-                  </h3>
-                  <p className="text-ink/70 text-sm leading-relaxed font-light">
-                    {service.description}
-                  </p>
                 </div>
+                <h3
+                  className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight service-title--fire"
+                  style={{
+                    animation: isVisible ? `fireBurn${idx} ${totalDuration}s linear infinite` : 'none',
+                  }}
+                >
+                  {service.title}
+                </h3>
+                <p className="text-ink/70 text-sm leading-relaxed font-light">
+                  {service.description}
+                </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>
