@@ -30,7 +30,7 @@ function HeroCarousel() {
             />
             <div className="absolute inset-0 flex items-center justify-end pr-20 sm:pr-32">
               <div className="text-right">
-                <p className="font-serif text-5xl sm:text-6xl md:text-7xl text-plaster/40 font-light leading-tight">
+                <p className="font-serif text-5xl sm:text-6xl md:text-7xl text-bronze font-light leading-tight drop-shadow-lg">
                   {service.title}
                 </p>
               </div>
