@@ -26,11 +26,11 @@ function HeroCarousel() {
             <img
               src={service.image}
               alt={service.title}
-              className="w-full h-full object-cover opacity-15"
+              className="w-full h-full object-cover opacity-35"
             />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <p className="font-serif text-4xl sm:text-5xl md:text-6xl text-plaster/30 font-light">
+            <div className="absolute inset-0 flex items-center justify-end pr-20 sm:pr-32">
+              <div className="text-right">
+                <p className="font-serif text-5xl sm:text-6xl md:text-7xl text-plaster/40 font-light leading-tight">
                   {service.title}
                 </p>
               </div>
@@ -428,15 +428,9 @@ export default function Home() {
         {/* Carousel with service images */}
         <HeroCarousel />
 
-        {/* Luxury gradient backdrop */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(215, 180, 105, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(100, 90, 80, 0.04) 0%, transparent 50%)'
-          }}
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/10 via-ink/50 to-ink" />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink" />
 
         <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-40 pb-32 sm:pt-56 sm:pb-48">
           <div className="max-w-3xl">
