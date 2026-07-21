@@ -80,7 +80,7 @@ module.exports = {
         premium: "0 2px 8px rgba(0, 0, 0, 0.06)",  // NEW: Subtle luxury shadow
       },
 
-      // ========== EXISTING KEYFRAMES & ANIMATIONS (KEEP AS IS) ==========
+      // ========== KEYFRAMES & ANIMATIONS ==========
       keyframes: {
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(16px)" },
@@ -94,11 +94,18 @@ module.exports = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "carousel": {
+          "0%": { opacity: "0", transform: "translateX(-100%)" },
+          "15%": { opacity: "1", transform: "translateX(0)" },
+          "85%": { opacity: "1", transform: "translateX(0)" },
+          "100%": { opacity: "0", transform: "translateX(100%)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fade-in 0.9s ease-out both",
         "scroll": "scroll 10s linear infinite",
+        "carousel": "carousel 24s linear infinite",
       },
     },
   },

@@ -9,6 +9,39 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
+// Hero Carousel Component
+function HeroCarousel() {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <div className="relative w-full h-full">
+        {SERVICES.map((service, idx) => (
+          <div
+            key={service.key}
+            className="absolute inset-0 animate-carousel"
+            style={{
+              animationDelay: `${idx * 6}s`,
+              animationDuration: `${SERVICES.length * 6}s`,
+            }}
+          >
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-full h-full object-cover opacity-15"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <p className="font-serif text-4xl sm:text-5xl md:text-6xl text-plaster/30 font-light">
+                  {service.title}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Fire blaze styles
 const fireStyles = `
 @keyframes fireBlaze {
@@ -392,21 +425,14 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- Hero */}
       <section className="relative bg-ink overflow-hidden">
+        {/* Carousel with service images */}
+        <HeroCarousel />
+
         {/* Luxury gradient backdrop */}
         <div
           className="absolute inset-0"
           style={{
             backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(215, 180, 105, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(100, 90, 80, 0.04) 0%, transparent 50%)'
-          }}
-        />
-
-        {/* Premium hero image — full width */}
-        <div
-          className="absolute inset-0 opacity-12"
-          style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&h=800&fit=crop&q=90")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
           }}
         />
 
