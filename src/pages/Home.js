@@ -14,22 +14,21 @@ function HeroCarousel({ featured }) {
   useEffect(() => {
     if (featured.length > 0) {
       console.log('HeroCarousel featured items:', featured);
-      featured.forEach((item, idx) => {
-        console.log(`Item ${idx} image URL:`, item.image_url || item.url || item.file_url || item.image);
-      });
+      console.log('Total featured items:', featured.length);
     }
   }, [featured]);
 
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
-  const slideDuration = servicesForSlide.length * 6;
+  const carouselDuration = featured.length > 0 ? featured.length * 6 : 20;
+  const serviceDuration = servicesForSlide.length * 6;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
-      {/* Background carousel - featured images */}
-      <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 6}s` : '20s' }}>
-        {featured.length > 0 ? (
-          featured.map((item) => (
+      {/* Background carousel - featured images sliding left to right */}
+      {featured.length > 0 ? (
+        <div className="absolute inset-0 flex animate-carousel-slide" style={{ animationDuration: `${carouselDuration}s` }}>
+          {featured.map((item) => (
             <div
               key={item.id}
               className="min-w-full h-full relative flex-shrink-0"
@@ -41,25 +40,23 @@ function HeroCarousel({ featured }) {
                 loading="eager"
               />
             </div>
-          ))
-        ) : (
-          <div className="min-w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink flex-shrink-0" />
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink-light to-ink" />
+      )}
 
-      {/* Service names overlay - sliding */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="flex h-full" style={{ animation: `carousel-slide linear infinite`, animationDuration: `${slideDuration}s` }}>
+      {/* Service names overlay - bottom right, sliding */}
+      <div className="absolute bottom-0 right-0 pointer-events-none pr-12 pb-12 sm:pr-20 sm:pb-16">
+        <div className="flex overflow-hidden" style={{ animation: `carousel-slide linear infinite`, animationDuration: `${serviceDuration}s`, width: `${servicesForSlide.length * 300}px` }}>
           {servicesForSlide.map((service) => (
             <div
               key={service.key}
-              className="min-w-full h-full flex items-center justify-end pr-20 sm:pr-32 flex-shrink-0"
+              className="min-w-max flex-shrink-0"
             >
-              <div className="text-right">
-                <p className="font-serif text-2xl sm:text-3xl md:text-4xl text-bronze font-light leading-tight drop-shadow-lg">
-                  {service.title}
-                </p>
-              </div>
+              <p className="font-serif text-xl sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg whitespace-nowrap">
+                {service.title}
+              </p>
             </div>
           ))}
         </div>
