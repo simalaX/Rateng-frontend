@@ -12,18 +12,22 @@ import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 // Hero Carousel Component
 function HeroCarousel({ featured }) {
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 5}s` : '20s' }}>
+    <div className="absolute inset-0 overflow-hidden bg-ink">
+      <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 6}s` : '20s' }}>
         {featured.length > 0 ? (
           featured.map((item) => (
             <div
               key={item.id}
-              className="min-w-full h-full relative flex-shrink-0"
+              className="min-w-full h-full relative flex-shrink-0 bg-ink"
             >
               <img
-                src={item.url || item.file_url}
-                alt={item.title}
-                className="w-full h-full object-cover opacity-40"
+                src={item.url || item.file_url || item.image}
+                alt={item.title || 'Portfolio'}
+                className="w-full h-full object-cover opacity-50"
+                onError={(e) => {
+                  console.error('Image load error:', item.url || item.file_url || item.image);
+                  e.target.style.display = 'none';
+                }}
               />
             </div>
           ))
@@ -350,34 +354,29 @@ export default function Home() {
       .then(({ data }) => {
         if (active) {
           setFeatured(data.items);
-          // Extended logging to see ALL properties
-          console.log('Full Portfolio Response:', data);
-          console.log('Portfolio items loaded:', data.items);
+          // Debug logging
+          console.log('Gallery API Response:', data);
+          console.log('Featured items loaded:', data.items);
+          if (data.items.length > 0) {
+            console.log('First item:', data.items[0]);
+            console.log('Image URL from first item:', data.items[0].url || data.items[0].file_url || data.items[0].image);
+          }
           data.items.forEach((item, idx) => {
-            console.log(`========== ITEM ${idx} ==========`);
-            console.log('ALL PROPERTIES:', item);
-            console.log('Checked fields:', {
-              type: item.type,
-              media_type: item.media_type,
-              contentType: item.contentType,
-              category: item.category,
-              kind: item.kind,
+            console.log(`Item ${idx}:`, {
+              id: item.id,
               url: item.url,
               file_url: item.file_url,
-              path: item.path,
-              filepath: item.filepath,
-              mime_type: item.mime_type,
-              mimeType: item.mimeType,
-              content_type: item.content_type,
-              name: item.name,
-              filename: item.filename,
+              image: item.image,
               title: item.title,
             });
           });
         }
       })
-      .catch(() => {
-        if (active) setFeatured([]);
+      .catch((err) => {
+        if (active) {
+          console.error('Gallery API error:', err);
+          setFeatured([]);
+        }
       });
     return () => {
       active = false;
