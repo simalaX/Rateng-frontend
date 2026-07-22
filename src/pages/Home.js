@@ -20,8 +20,8 @@ function HeroCarousel({ featured }) {
 
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
-  const carouselDuration = featured.length > 0 ? featured.length * 6 : 20;
-  const serviceDuration = servicesForSlide.length * 6;
+  const carouselDuration = 3; // 3 seconds for images
+  const serviceDuration = 3; // 3 seconds for service names
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
