@@ -9,6 +9,18 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
+// Optimize image URL for mobile
+function optimizeImageUrl(url) {
+  if (!url) return '';
+
+  // If it's a Cloudinary URL, optimize it
+  if (url.includes('cloudinary.com') || url.includes('res.cloudinary.com')) {
+    // Add quality and size optimization
+    return url.replace('/upload/', '/upload/q_auto,f_auto,w_1200,c_limit/');
+  }
+  return url;
+}
+
 // Hero Carousel Component with Service Names
 function HeroCarousel({ featured }) {
   // Use SERVICES for sliding names (4 items)
@@ -29,32 +41,42 @@ function HeroCarousel({ featured }) {
             backfaceVisibility: 'hidden',
           }}
         >
-          {featured.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                flex: '0 0 100%',
-                minWidth: '100%',
-                width: '100%',
-                height: '100%',
-                position: 'relative',
-              }}
-            >
-              <img
-                src={item.image_url || item.url || item.file_url || item.image}
-                alt={item.title || 'Portfolio'}
-                loading="eager"
-                decoding="async"
+          {featured.map((item) => {
+            const imageUrl = optimizeImageUrl(item.image_url || item.url || item.file_url || item.image);
+            return (
+              <div
+                key={item.id}
                 style={{
+                  flex: '0 0 100%',
+                  minWidth: '100%',
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  objectPosition: 'center',
+                  position: 'relative',
+                  backgroundColor: '#1a1a1a',
                 }}
-              />
-            </div>
-          ))}
+              >
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt={item.title || 'Portfolio'}
+                    loading="eager"
+                    decoding="async"
+                    srcSet={`${imageUrl} 1x, ${imageUrl.replace('/w_1200,', '/w_1600,')} 2x`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      objectPosition: 'center',
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink" />
@@ -370,44 +392,48 @@ function ServicesGrid() {
         `}</style>
 
         <div ref={gridRef} className="relative min-h-96 overflow-hidden">
-          {SERVICES.map((service, idx) => (
-            <div
-              key={service.key}
-              style={{
-                animation: isVisible ? `serviceSlide${idx} ${totalDuration}s linear infinite` : 'none',
-                position: 'absolute',
-                width: '100%',
-                top: 0,
-                left: 0,
-              }}
-            >
-              <div className="group flex flex-col">
-                <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                  />
-                  <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
-                    {String(idx + 1).padStart(2, '0')}
+          {SERVICES.map((service, idx) => {
+            const serviceImageUrl = optimizeImageUrl(service.image);
+            return (
+              <div
+                key={service.key}
+                style={{
+                  animation: isVisible ? `serviceSlide${idx} ${totalDuration}s linear infinite` : 'none',
+                  position: 'absolute',
+                  width: '100%',
+                  top: 0,
+                  left: 0,
+                }}
+              >
+                <div className="group flex flex-col">
+                  <div className="relative h-56 overflow-hidden bg-ink/8 mb-6 border border-plaster/10 transition-all duration-500 group-hover:border-plaster/30">
+                    <img
+                      src={serviceImageUrl}
+                      alt={service.title}
+                      loading="lazy"
+                      decoding="async"
+                      srcSet={`${serviceImageUrl} 1x, ${serviceImageUrl.replace('/w_1200,', '/w_1600,')} 2x`}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                    />
+                    <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
+                      {String(idx + 1).padStart(2, '0')}
+                    </div>
                   </div>
+                  <h3
+                    className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight service-title--fire"
+                    style={{
+                      animation: isVisible ? `fireBurn${idx} ${totalDuration}s linear infinite` : 'none',
+                    }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p className="text-ink/70 text-sm leading-relaxed font-light">
+                    {service.description}
+                  </p>
                 </div>
-                <h3
-                  className="font-serif text-lg sm:text-xl text-ink font-light mb-3 leading-tight service-title--fire"
-                  style={{
-                    animation: isVisible ? `fireBurn${idx} ${totalDuration}s linear infinite` : 'none',
-                  }}
-                >
-                  {service.title}
-                </h3>
-                <p className="text-ink/70 text-sm leading-relaxed font-light">
-                  {service.description}
-                </p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

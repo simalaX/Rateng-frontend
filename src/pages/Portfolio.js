@@ -8,6 +8,18 @@ import Loader from "../components/Loader";
 
 const ITEMS_PER_PAGE = 12;
 
+// Optimize image URL for mobile
+function optimizeImageUrl(url) {
+  if (!url) return '';
+
+  // If it's a Cloudinary URL, optimize it
+  if (url.includes('cloudinary.com') || url.includes('res.cloudinary.com')) {
+    // Add quality and size optimization for thumbnails
+    return url.replace('/upload/', '/upload/q_auto,f_auto,w_800,c_limit/');
+  }
+  return url;
+}
+
 export default function Portfolio() {
   const [tab, setTab] = useState("image"); // "image" | "video"
   const [category, setCategory] = useState("");
@@ -32,29 +44,47 @@ export default function Portfolio() {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    const endpoint = tab === "video" ? "/api/videos/" : "/api/gallery/";
-    const params = { limit: ITEMS_PER_PAGE, offset: (page - 1) * ITEMS_PER_PAGE };
-    if (category) params.category = category;
-    if (debouncedSearch) params.search = debouncedSearch;
 
-    client
-      .get(endpoint, { params })
-      .then(({ data }) => {
+    const fetchPortfolio = async (retryCount = 0) => {
+      const maxRetries = 3;
+      const endpoint = tab === "video" ? "/api/videos/" : "/api/gallery/";
+      const params = { limit: ITEMS_PER_PAGE, offset: (page - 1) * ITEMS_PER_PAGE };
+      if (category) params.category = category;
+      if (debouncedSearch) params.search = debouncedSearch;
+
+      try {
+        const response = await client.get(endpoint, {
+          params,
+          timeout: 10000, // 10 second timeout for mobile
+        });
+
         if (active) {
-          const newItems = data.items || [];
+          const newItems = response.data?.items || [];
           setItems(prev => page === 1 ? newItems : [...prev, ...newItems]);
           setHasMore(newItems.length === ITEMS_PER_PAGE);
         }
-      })
-      .catch(() => {
+      } catch (err) {
+        if (!active) return;
+
+        // Retry on network error for mobile
+        if ((err.message === 'Network Error' || err.code === 'ECONNABORTED') && retryCount < maxRetries) {
+          console.log(`Retrying portfolio fetch... (${retryCount + 1}/${maxRetries})`);
+          setTimeout(() => {
+            if (active) fetchPortfolio(retryCount + 1);
+          }, 1000 * (retryCount + 1)); // Exponential backoff
+          return;
+        }
+
         if (active) {
           if (page === 1) setItems([]);
           setHasMore(false);
         }
-      })
-      .finally(() => {
+      } finally {
         if (active) setLoading(false);
-      });
+      }
+    };
+
+    fetchPortfolio();
 
     return () => {
       active = false;

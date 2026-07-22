@@ -6,6 +6,42 @@ import SEO from "../components/SEO";
 import Loader from "../components/Loader";
 import { CATEGORY_LABELS } from "../data/staticContent";
 
+/**
+ * Optimize Cloudinary image URL for responsive display
+ * Automatically adjusts quality, format, and width for device
+ */
+function optimizeDetailImage(url) {
+  if (!url || !url.includes('cloudinary.com')) return url;
+
+  // Insert transformation params after /upload/
+  return url.replace(
+    '/upload/',
+    '/upload/q_auto,f_auto,c_limit/'
+  );
+}
+
+/**
+ * Generate responsive image srcSet for detail images
+ * 1x for standard displays, 2x for retina/high-DPI
+ */
+function getDetailImageSrcSet(url) {
+  if (!url || !url.includes('cloudinary.com')) {
+    return { src: url, srcSet: '' };
+  }
+
+  const mobile = url.replace('/upload/', '/upload/w_800,q_auto,f_auto,c_limit/');
+  const desktop = url.replace('/upload/', '/upload/w_1400,q_auto,f_auto,c_limit/');
+  const retina = url.replace('/upload/', '/upload/w_2800,q_auto,f_auto,c_limit/');
+
+  return {
+    src: optimizeDetailImage(url),
+    srcSet: `${desktop} 1x, ${retina} 2x`,
+    // For picture element fallback (mobile-first)
+    mobileSrc: mobile,
+    mobileSrcSet: `${mobile} 1x, ${url.replace('/upload/', '/upload/w_1600,q_auto,f_auto,c_limit/')} 2x`
+  };
+}
+
 export default function PortfolioDetail() {
   const { type, id } = useParams();
   const [item, setItem] = useState(null);
@@ -55,6 +91,7 @@ export default function PortfolioDetail() {
   }
 
   const category = CATEGORY_LABELS[item.category];
+  const imageOptimization = type !== "video" ? getDetailImageSrcSet(item.image_url) : null;
 
   return (
     <>
@@ -83,11 +120,22 @@ export default function PortfolioDetail() {
               />
             </div>
           ) : (
-            <img
-              src={item.image_url}
-              alt={item.title}
-              className="w-full max-h-[70vh] object-contain bg-black"
-            />
+            <picture>
+              {/* Mobile-first: load smaller image on small screens */}
+              <source
+                media="(max-width: 768px)"
+                srcSet={imageOptimization?.mobileSrcSet}
+                src={imageOptimization?.mobileSrc}
+              />
+              {/* Desktop: standard responsive image with srcSet for retina */}
+              <img
+                src={imageOptimization?.src || item.image_url}
+                srcSet={imageOptimization?.srcSet}
+                alt={item.title}
+                className="w-full max-h-[70vh] object-contain bg-black"
+                loading="lazy"
+              />
+            </picture>
           )}
         </div>
       </section>
