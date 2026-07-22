@@ -9,39 +9,6 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
-// Hero Carousel Component
-function HeroCarousel() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="relative w-full h-full">
-        {SERVICES.map((service, idx) => (
-          <div
-            key={service.key}
-            className="absolute inset-0 animate-carousel"
-            style={{
-              animationDelay: `${idx * 6}s`,
-              animationDuration: `${SERVICES.length * 6}s`,
-            }}
-          >
-            <img
-              src={service.image}
-              alt={service.title}
-              className="w-full h-full object-cover opacity-35"
-            />
-            <div className="absolute inset-0 flex items-center justify-end pr-20 sm:pr-32">
-              <div className="text-right">
-                <p className="font-serif text-5xl sm:text-6xl md:text-7xl text-bronze font-light leading-tight drop-shadow-lg">
-                  {service.title}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Fire blaze styles
 const fireStyles = `
 @keyframes fireBlaze {
@@ -425,9 +392,6 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- Hero */}
       <section className="relative bg-ink overflow-hidden">
-        {/* Carousel with service images */}
-        <HeroCarousel />
-
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink" />
@@ -438,11 +402,7 @@ export default function Home() {
               Kenya • Uganda • South Sudan
             </p>
             <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl font-light leading-[1.1] mb-10">
-              <span className="block fire-text fire-text--animated fire-text--hero-delay-1">We Build,</span>
-              <br />
-              <span className="block fire-text fire-text--animated fire-text--hero-delay-2">We Design,</span>
-              <br />
-              <span className="block fire-text fire-text--animated fire-text--hero-delay-3">we furnish.</span>
+              <span className="fire-text fire-text--animated fire-text--hero-delay-1">We Build, We Design, we furnish.</span>
             </h1>
             <p className="text-plaster/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-light mb-12">
               From structural steel and glass facades to fully furnished interiors. One team. One point of contact. Every project, end to end.
