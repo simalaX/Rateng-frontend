@@ -107,7 +107,7 @@ export default function Navbar() {
             +254 728 977 636
           </a>
           <span className="text-ink/20">•</span>
-          <span className="text-ink/60 font-mono">Mon–Fri 08:00–17:00</span>
+          <span className="text-ink/60 font-mono">Mon–Sat 08:00–17:00</span>
         </div>
       </div>
 
