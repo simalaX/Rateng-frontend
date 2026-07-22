@@ -27,17 +27,18 @@ function HeroCarousel({ featured }) {
     <div className="absolute inset-0 overflow-hidden bg-ink">
       {/* Background carousel - featured images sliding left to right */}
       {featured.length > 0 ? (
-        <div className="absolute inset-0 flex animate-carousel-slide" style={{ animationDuration: `${carouselDuration}s` }}>
+        <div className="absolute inset-0 flex animate-carousel-slide" style={{ animationDuration: `${carouselDuration}s`, willChange: 'transform' }}>
           {featured.map((item) => (
             <div
               key={item.id}
-              className="min-w-full h-full relative flex-shrink-0"
+              className="w-full h-full flex-shrink-0 relative"
             >
               <img
                 src={item.image_url || item.url || item.file_url || item.image}
                 alt={item.title || 'Portfolio'}
                 className="w-full h-full object-cover"
                 loading="eager"
+                decoding="async"
               />
             </div>
           ))}
@@ -47,14 +48,14 @@ function HeroCarousel({ featured }) {
       )}
 
       {/* Service names overlay - bottom right, sliding */}
-      <div className="absolute bottom-8 right-8 sm:bottom-12 sm:right-12 pointer-events-none z-10">
-        <div className="flex animate-carousel-slide" style={{ animationDuration: `${serviceDuration}s`, minWidth: `100vw` }}>
+      <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 pointer-events-none z-10">
+        <div className="flex animate-carousel-slide" style={{ animationDuration: `${serviceDuration}s`, minWidth: '200vw' }}>
           {servicesForSlide.map((service) => (
             <div
               key={service.key}
-              className="min-w-full px-8"
+              className="flex-shrink-0 px-4 sm:px-8"
             >
-              <p className="font-serif text-lg sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg text-right">
+              <p className="font-serif text-sm sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg text-right whitespace-nowrap">
                 {service.title}
               </p>
             </div>
@@ -658,9 +659,14 @@ export default function Home() {
       {/* ---------------------------------------------------------- CTA */}
       <section className="bg-bronze py-32 sm:py-40">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-10 text-center sm:text-left">
-          <h2 className="font-serif text-4xl sm:text-5xl text-ink font-light leading-tight">
-            Start your<br className="hidden sm:inline" /> next project
-          </h2>
+          <div>
+            <h2 className="font-serif text-4xl sm:text-5xl text-ink font-light leading-tight mb-4">
+              Start your<br className="hidden sm:inline" /> next project
+            </h2>
+            <p className="font-mono text-xs uppercase tracking-[0.1em] text-ink/70">
+              Working Hours: Monday - Saturday
+            </p>
+          </div>
           <Link
             to="/contact"
             className="inline-flex items-center gap-3 px-8 py-4 bg-ink text-plaster font-mono text-xs uppercase tracking-[0.15em] hover:bg-ink-light transition-all duration-300 shadow-sm hover:shadow-md shrink-0"
