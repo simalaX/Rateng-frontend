@@ -9,7 +9,7 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
-// Hero Carousel Component
+// Hero Carousel Component with Service Names
 function HeroCarousel({ featured }) {
   useEffect(() => {
     if (featured.length > 0) {
@@ -20,8 +20,13 @@ function HeroCarousel({ featured }) {
     }
   }, [featured]);
 
+  // Use SERVICES for sliding names (4 items)
+  const servicesForSlide = SERVICES.slice(0, 4);
+  const slideDuration = servicesForSlide.length * 6;
+
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
+      {/* Background carousel - featured images */}
       <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 6}s` : '20s' }}>
         {featured.length > 0 ? (
           featured.map((item) => (
@@ -40,6 +45,24 @@ function HeroCarousel({ featured }) {
         ) : (
           <div className="min-w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink flex-shrink-0" />
         )}
+      </div>
+
+      {/* Service names overlay - sliding */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="flex h-full" style={{ animation: `carousel-slide linear infinite`, animationDuration: `${slideDuration}s` }}>
+          {servicesForSlide.map((service) => (
+            <div
+              key={service.key}
+              className="min-w-full h-full flex items-center justify-end pr-20 sm:pr-32 flex-shrink-0"
+            >
+              <div className="text-right">
+                <p className="font-serif text-2xl sm:text-3xl md:text-4xl text-bronze font-light leading-tight drop-shadow-lg">
+                  {service.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -438,7 +461,7 @@ export default function Home() {
             <p className={`font-mono text-xs sm:text-sm tracking-[0.2em] uppercase fire-text fire-text--animated fire-text--delay-location mb-10 block`}>
               Kenya • Uganda • South Sudan
             </p>
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-light leading-[1.1] mb-10">
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light leading-[1.1] mb-10">
               <span className="fire-text fire-text--animated fire-text--hero-delay-1">We Design, Build and Furnish.</span>
             </h1>
             <p className="text-plaster/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-light mb-12">
