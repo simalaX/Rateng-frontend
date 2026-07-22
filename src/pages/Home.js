@@ -47,14 +47,14 @@ function HeroCarousel({ featured }) {
       )}
 
       {/* Service names overlay - bottom right, sliding */}
-      <div className="absolute bottom-0 right-0 pointer-events-none pr-12 pb-12 sm:pr-20 sm:pb-16">
-        <div className="flex overflow-hidden" style={{ animation: `carousel-slide linear infinite`, animationDuration: `${serviceDuration}s`, width: `${servicesForSlide.length * 300}px` }}>
+      <div className="absolute bottom-8 right-8 sm:bottom-12 sm:right-12 pointer-events-none z-10">
+        <div className="flex animate-carousel-slide" style={{ animationDuration: `${serviceDuration}s`, minWidth: `100vw` }}>
           {servicesForSlide.map((service) => (
             <div
               key={service.key}
-              className="min-w-max flex-shrink-0"
+              className="min-w-full px-8"
             >
-              <p className="font-serif text-xl sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg whitespace-nowrap">
+              <p className="font-serif text-lg sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg text-right">
                 {service.title}
               </p>
             </div>
