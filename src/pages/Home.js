@@ -10,29 +10,26 @@ import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 // Hero Carousel Component
-function HeroCarousel() {
+function HeroCarousel({ featured }) {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <div className="flex h-full animate-carousel-slide" style={{ animationDuration: `${SERVICES.length * 8}s` }}>
-        {SERVICES.map((service) => (
-          <div
-            key={service.key}
-            className="min-w-full h-full relative flex-shrink-0"
-          >
-            <img
-              src={service.image}
-              alt={service.title}
-              className="w-full h-full object-cover opacity-35"
-            />
-            <div className="absolute inset-0 flex items-center justify-end pr-20 sm:pr-32">
-              <div className="text-right">
-                <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-bronze font-light leading-tight drop-shadow-lg">
-                  {service.title}
-                </p>
-              </div>
+      <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 5}s` : '20s' }}>
+        {featured.length > 0 ? (
+          featured.map((item) => (
+            <div
+              key={item.id}
+              className="min-w-full h-full relative flex-shrink-0"
+            >
+              <img
+                src={item.url || item.file_url}
+                alt={item.title}
+                className="w-full h-full object-cover opacity-40"
+              />
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="min-w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink flex-shrink-0" />
+        )}
       </div>
     </div>
   );
@@ -434,8 +431,8 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- Hero */}
       <section className="relative bg-ink overflow-hidden">
-        {/* Carousel with service images */}
-        <HeroCarousel />
+        {/* Carousel with portfolio images */}
+        <HeroCarousel featured={featured} />
 
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
