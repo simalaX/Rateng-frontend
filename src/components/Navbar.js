@@ -85,7 +85,7 @@ export default function Navbar() {
             <div className="flex flex-col gap-1">
               <span className="font-mono text-[10px] uppercase tracking-widest text-ink/50">Hours</span>
               <span className="font-serif text-sm font-light text-ink whitespace-nowrap">
-                Mon–Fri, 08:00–17:00
+                Mon–Sat, 08:00–17:00
               </span>
             </div>
           </div>
