@@ -11,6 +11,15 @@ import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 // Hero Carousel Component
 function HeroCarousel({ featured }) {
+  useEffect(() => {
+    if (featured.length > 0) {
+      console.log('HeroCarousel featured items:', featured);
+      featured.forEach((item, idx) => {
+        console.log(`Item ${idx} image URL:`, item.image_url || item.url || item.file_url || item.image);
+      });
+    }
+  }, [featured]);
+
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
       <div className="flex h-full animate-carousel-slide" style={{ animationDuration: featured.length > 0 ? `${featured.length * 6}s` : '20s' }}>
@@ -18,16 +27,13 @@ function HeroCarousel({ featured }) {
           featured.map((item) => (
             <div
               key={item.id}
-              className="min-w-full h-full relative flex-shrink-0 bg-ink"
+              className="min-w-full h-full relative flex-shrink-0"
             >
               <img
-                src={item.url || item.file_url || item.image}
+                src={item.image_url || item.url || item.file_url || item.image}
                 alt={item.title || 'Portfolio'}
-                className="w-full h-full object-cover opacity-50"
-                onError={(e) => {
-                  console.error('Image load error:', item.url || item.file_url || item.image);
-                  e.target.style.display = 'none';
-                }}
+                className="w-full h-full object-cover"
+                loading="eager"
               />
             </div>
           ))
@@ -354,22 +360,12 @@ export default function Home() {
       .then(({ data }) => {
         if (active) {
           setFeatured(data.items);
-          // Debug logging
           console.log('Gallery API Response:', data);
           console.log('Featured items loaded:', data.items);
           if (data.items.length > 0) {
-            console.log('First item:', data.items[0]);
-            console.log('Image URL from first item:', data.items[0].url || data.items[0].file_url || data.items[0].image);
+            console.log('First item full:', JSON.stringify(data.items[0], null, 2));
+            console.log('First item keys:', Object.keys(data.items[0]));
           }
-          data.items.forEach((item, idx) => {
-            console.log(`Item ${idx}:`, {
-              id: item.id,
-              url: item.url,
-              file_url: item.file_url,
-              image: item.image,
-              title: item.title,
-            });
-          });
         }
       })
       .catch((err) => {
