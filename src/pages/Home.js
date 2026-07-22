@@ -14,18 +14,19 @@ function HeroCarousel({ featured }) {
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
   const carouselDuration = featured.length > 0 ? featured.length * 3 : 3; // 3 seconds per image
-  const serviceDuration = 3; // 3 seconds for service names
+  const serviceDuration = 5; // 5 seconds for service names
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-ink">
+    <div className="absolute inset-0 overflow-hidden bg-ink min-h-96">
       {/* Background carousel - featured images sliding left to right */}
       {featured.length > 0 ? (
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 w-full h-full"
           style={{
             display: 'flex',
             animation: `carousel-slide ${carouselDuration}s linear infinite`,
             willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         >
           {featured.map((item) => (
@@ -33,6 +34,7 @@ function HeroCarousel({ featured }) {
               key={item.id}
               style={{
                 flex: '0 0 100%',
+                minWidth: '100%',
                 width: '100%',
                 height: '100%',
                 position: 'relative',
@@ -41,18 +43,21 @@ function HeroCarousel({ featured }) {
               <img
                 src={item.image_url || item.url || item.file_url || item.image}
                 alt={item.title || 'Portfolio'}
+                loading="eager"
+                decoding="async"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                   display: 'block',
+                  objectPosition: 'center',
                 }}
               />
             </div>
           ))}
         </div>
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink-light to-ink" />
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink" />
       )}
 
       {/* Service names overlay - bottom right, sliding */}
@@ -69,6 +74,7 @@ function HeroCarousel({ featured }) {
             display: 'flex',
             animation: `carousel-slide ${serviceDuration}s linear infinite`,
             willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         >
           {servicesForSlide.map((service) => (
@@ -77,6 +83,7 @@ function HeroCarousel({ featured }) {
               style={{
                 flex: '0 0 100vw',
                 width: '100vw',
+                minWidth: '100vw',
                 padding: '0 1rem',
               }}
             >
@@ -379,6 +386,8 @@ function ServicesGrid() {
                   <img
                     src={service.image}
                     alt={service.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                   />
                   <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
@@ -420,7 +429,7 @@ export default function Home() {
     const fetchGallery = async () => {
       try {
         console.log('Starting gallery fetch...');
-        const response = await client.get("/api/gallery/");
+        const response = await client.get("/api/gallery/", { params: { limit: 8 } });
         console.log('Gallery API Response:', response);
 
         if (!active) return;
@@ -502,7 +511,7 @@ export default function Home() {
       />
 
       {/* ---------------------------------------------------------- Hero */}
-      <section className="relative bg-ink overflow-hidden">
+      <section className="relative bg-ink overflow-hidden min-h-screen">
         {/* Carousel with portfolio images */}
         <HeroCarousel featured={featured} />
 
@@ -510,7 +519,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink" />
 
-        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-40 pb-32 sm:pt-56 sm:pb-48">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-8 pt-40 pb-32 sm:pt-56 sm:pb-48 h-full flex flex-col justify-center">
           <div className="max-w-3xl">
             <p className={`font-mono text-xs sm:text-sm tracking-[0.2em] uppercase fire-text fire-text--animated fire-text--delay-location mb-10 block`}>
               Kenya • Uganda • South Sudan

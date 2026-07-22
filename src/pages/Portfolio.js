@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaSearch } from "react-icons/fa";
 import client from "../api/client";
 import SEO from "../components/SEO";
 import CategoryFilter from "../components/CategoryFilter";
 import MediaCard from "../components/MediaCard";
 import Loader from "../components/Loader";
+
+const ITEMS_PER_PAGE = 12;
 
 export default function Portfolio() {
   const [tab, setTab] = useState("image"); // "image" | "video"
@@ -13,6 +15,8 @@ export default function Portfolio() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 350);
@@ -20,20 +24,33 @@ export default function Portfolio() {
   }, [search]);
 
   useEffect(() => {
+    // Reset page when filters change
+    setPage(1);
+    setItems([]);
+  }, [tab, category, debouncedSearch]);
+
+  useEffect(() => {
     let active = true;
     setLoading(true);
     const endpoint = tab === "video" ? "/api/videos/" : "/api/gallery/";
-    const params = { limit: 24 };
+    const params = { limit: ITEMS_PER_PAGE, offset: (page - 1) * ITEMS_PER_PAGE };
     if (category) params.category = category;
     if (debouncedSearch) params.search = debouncedSearch;
 
     client
       .get(endpoint, { params })
       .then(({ data }) => {
-        if (active) setItems(data.items);
+        if (active) {
+          const newItems = data.items || [];
+          setItems(prev => page === 1 ? newItems : [...prev, ...newItems]);
+          setHasMore(newItems.length === ITEMS_PER_PAGE);
+        }
       })
       .catch(() => {
-        if (active) setItems([]);
+        if (active) {
+          if (page === 1) setItems([]);
+          setHasMore(false);
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -42,7 +59,13 @@ export default function Portfolio() {
     return () => {
       active = false;
     };
-  }, [tab, category, debouncedSearch]);
+  }, [tab, category, debouncedSearch, page]);
+
+  const loadMore = useCallback(() => {
+    if (!loading && hasMore) {
+      setPage(prev => prev + 1);
+    }
+  }, [loading, hasMore]);
 
   return (
     <>
@@ -86,9 +109,8 @@ export default function Portfolio() {
                   key={t}
                   type="button"
                   onClick={() => setTab(t)}
-                  className={`px-6 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors ${
-                    tab === t ? "bg-ink text-plaster" : "text-ink/60 hover:text-ink"
-                  }`}
+                  className={`px-6 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors ${tab === t ? "bg-ink text-plaster" : "text-ink/60 hover:text-ink"
+                    }`}
                 >
                   {t === "image" ? "Photos" : "Videos"}
                 </button>
@@ -99,9 +121,9 @@ export default function Portfolio() {
           <CategoryFilter value={category} onChange={setCategory} />
 
           <div className="mt-10">
-            {loading ? (
+            {page === 1 && loading ? (
               <Loader label="Loading portfolio" />
-            ) : items.length === 0 ? (
+            ) : items.length === 0 && page === 1 ? (
               <div className="text-center py-20 border border-dashed border-ink/15">
                 <p className="font-heading text-xl text-ink/70">Nothing here yet</p>
                 <p className="mt-2 text-sm text-ink/50">
@@ -111,11 +133,26 @@ export default function Portfolio() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map((item) => (
-                  <MediaCard key={item.id} item={item} type={tab} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {items.map((item) => (
+                    <MediaCard key={item.id} item={item} type={tab} />
+                  ))}
+                </div>
+
+                {/* Load More Button */}
+                {hasMore && (
+                  <div className="flex justify-center mt-12">
+                    <button
+                      onClick={loadMore}
+                      disabled={loading}
+                      className="px-8 py-3 border border-ink/30 text-ink font-mono text-xs uppercase tracking-[0.15em] hover:bg-ink hover:text-plaster transition-all disabled:opacity-50"
+                    >
+                      {loading ? "Loading..." : "Load More"}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
