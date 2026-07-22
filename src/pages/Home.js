@@ -13,31 +13,18 @@ import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 function HeroCarousel({ featured }) {
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
-  const carouselDuration = featured.length > 0 ? featured.length * 5 : 15; // 5 seconds per image
+  const carouselDuration = featured.length > 0 ? featured.length * 3 : 3; // 3 seconds per image
   const serviceDuration = 3; // 3 seconds for service names
-
-  // Dynamic keyframes for carousel based on number of items
-  const carouselKeyframes = `
-    @keyframes carousel-slide-dynamic {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-${featured.length * 100}%);
-      }
-    }
-  `;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
-      <style>{carouselKeyframes}</style>
       {/* Background carousel - featured images sliding left to right */}
       {featured.length > 0 ? (
         <div
           className="absolute inset-0"
           style={{
             display: 'flex',
-            animation: `carousel-slide-dynamic ${carouselDuration}s linear infinite`,
+            animation: `carousel-slide ${carouselDuration}s linear infinite`,
             willChange: 'transform',
           }}
         >
@@ -421,63 +408,83 @@ function ServicesGrid() {
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
-  const [portfolioFilter, setPortfolioFilter] = useState('all'); // 'all', 'photos', 'videos'
+  const [portfolioFilter, setPortfolioFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let active = true;
-    client
-      .get("/api/gallery/")
-      .then(({ data }) => {
-        if (active) {
-          setFeatured(data.items);
-          console.log('Gallery API Response:', data);
-          console.log('Featured items loaded:', data.items);
-          if (data.items.length > 0) {
-            console.log('First item full:', JSON.stringify(data.items[0], null, 2));
-            console.log('First item keys:', Object.keys(data.items[0]));
-          }
-        }
-      })
-      .catch((err) => {
-        if (active) {
-          console.error('Gallery API error:', err);
+    setLoading(true);
+    setError(null);
+
+    const fetchGallery = async () => {
+      try {
+        console.log('Starting gallery fetch...');
+        const response = await client.get("/api/gallery/");
+        console.log('Gallery API Response:', response);
+
+        if (!active) return;
+
+        // Handle different response structures
+        const items = response.data?.items || response.data || [];
+        console.log('Extracted items:', items);
+        console.log('Items length:', items.length);
+
+        if (Array.isArray(items) && items.length > 0) {
+          console.log('First item:', items[0]);
+          setFeatured(items);
+          setError(null);
+        } else {
+          console.warn('No items found in gallery response');
           setFeatured([]);
+          setError('No gallery items available');
         }
-      });
+      } catch (err) {
+        if (!active) return;
+
+        console.error('Gallery API Error:', err);
+        console.error('Error details:', {
+          message: err.message,
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          data: err.response?.data,
+        });
+
+        setFeatured([]);
+        setError(err.message || 'Failed to load gallery');
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchGallery();
+
     return () => {
       active = false;
     };
   }, []);
 
-  // Filter featured items based on selected filter - comprehensive video detection
+  // Filter featured items based on selected filter
   const filteredFeatured = featured.filter((item) => {
     if (portfolioFilter === 'all') return true;
 
-    // More comprehensive video detection - check all possible properties
     const isVideo =
-      // Direct type checks
       item.type === 'video' ||
       item.media_type === 'video' ||
       item.contentType === 'video' ||
       item.category === 'video' ||
       item.kind === 'video' ||
-
-      // MIME type checks
       item.mime_type?.toLowerCase().includes('video') ||
       item.mimeType?.toLowerCase().includes('video') ||
       item.content_type?.toLowerCase().includes('video') ||
-
-      // URL/file extension checks - check both url and file_url
       item.url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
       item.file_url?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
       item.path?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
       item.filepath?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
-
-      // Filename checks
       item.name?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
       item.filename?.toLowerCase().match(/\.(mp4|webm|mov|avi|mkv|m4v|flv|wmv|3gp)$/i) ||
-
-      // Check if title indicates video
       item.title?.toLowerCase().includes('video') ||
       item.title?.toLowerCase().includes('film');
 
@@ -612,7 +619,12 @@ export default function Home() {
             )}
           </div>
 
-          {featured.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-ink/60 text-base font-light">Loading portfolio...</p>
+              {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
+            </div>
+          ) : featured.length > 0 ? (
             <div className="grid grid-cols-2 gap-8">
               {filteredFeatured.length > 0 ? (
                 filteredFeatured.map((item) => (
@@ -625,9 +637,10 @@ export default function Home() {
               )}
             </div>
           ) : (
-            <p className="text-ink/60 text-base font-light text-center py-12">
-              Loading portfolio...
-            </p>
+            <div className="text-center py-12">
+              <p className="text-ink/60 text-base font-light">No portfolio items available</p>
+              {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
+            </div>
           )}
         </div>
       </section>
