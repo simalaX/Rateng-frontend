@@ -11,13 +11,6 @@ import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 // Hero Carousel Component with Service Names
 function HeroCarousel({ featured }) {
-  useEffect(() => {
-    if (featured.length > 0) {
-      console.log('HeroCarousel featured items:', featured);
-      console.log('Total featured items:', featured.length);
-    }
-  }, [featured]);
-
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
   const carouselDuration = 3; // 3 seconds for images
@@ -27,18 +20,33 @@ function HeroCarousel({ featured }) {
     <div className="absolute inset-0 overflow-hidden bg-ink">
       {/* Background carousel - featured images sliding left to right */}
       {featured.length > 0 ? (
-        <div className="absolute inset-0 flex animate-carousel-slide" style={{ animationDuration: `${carouselDuration}s`, willChange: 'transform' }}>
+        <div
+          className="absolute inset-0"
+          style={{
+            display: 'flex',
+            animation: `carousel-slide ${carouselDuration}s linear infinite`,
+            willChange: 'transform',
+          }}
+        >
           {featured.map((item) => (
             <div
               key={item.id}
-              className="w-full h-full flex-shrink-0 relative"
+              style={{
+                flex: '0 0 100%',
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+              }}
             >
               <img
                 src={item.image_url || item.url || item.file_url || item.image}
                 alt={item.title || 'Portfolio'}
-                className="w-full h-full object-cover"
-                loading="eager"
-                decoding="async"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
               />
             </div>
           ))}
@@ -48,14 +56,42 @@ function HeroCarousel({ featured }) {
       )}
 
       {/* Service names overlay - bottom right, sliding */}
-      <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 pointer-events-none z-10">
-        <div className="flex animate-carousel-slide" style={{ animationDuration: `${serviceDuration}s`, minWidth: '200vw' }}>
+      <div
+        className="absolute z-10"
+        style={{
+          bottom: '1rem',
+          right: '1rem',
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            animation: `carousel-slide ${serviceDuration}s linear infinite`,
+            willChange: 'transform',
+          }}
+        >
           {servicesForSlide.map((service) => (
             <div
               key={service.key}
-              className="flex-shrink-0 px-4 sm:px-8"
+              style={{
+                flex: '0 0 100vw',
+                width: '100vw',
+                padding: '0 1rem',
+              }}
             >
-              <p className="font-serif text-sm sm:text-2xl md:text-3xl text-bronze font-light drop-shadow-lg text-right whitespace-nowrap">
+              <p
+                style={{
+                  fontFamily: 'serif',
+                  fontSize: 'clamp(0.875rem, 3vw, 1.875rem)',
+                  color: '#d4a574',
+                  fontWeight: 300,
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  textAlign: 'right',
+                  whiteSpace: 'nowrap',
+                  margin: 0,
+                }}
+              >
                 {service.title}
               </p>
             </div>
