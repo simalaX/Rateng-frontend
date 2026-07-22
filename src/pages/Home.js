@@ -11,30 +11,55 @@ import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
 // Hero Carousel Component with Service Names
 function HeroCarousel({ featured }) {
+  // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
+  const carouselDuration = featured.length > 0 ? featured.length * 5 : 15; // 5 seconds per image
+  const serviceDuration = 3; // 3 seconds for service names
+
+  // Dynamic keyframes for carousel based on number of items
+  const carouselKeyframes = `
+    @keyframes carousel-slide-dynamic {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-${featured.length * 100}%);
+      }
+    }
+  `;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
-      {/* Background carousel - featured images */}
-      {featured && featured.length > 0 ? (
+      <style>{carouselKeyframes}</style>
+      {/* Background carousel - featured images sliding left to right */}
+      {featured.length > 0 ? (
         <div
-          className="absolute inset-0 flex"
+          className="absolute inset-0"
           style={{
-            animation: `carousel-slide 3s linear infinite`,
+            display: 'flex',
+            animation: `carousel-slide-dynamic ${carouselDuration}s linear infinite`,
             willChange: 'transform',
           }}
         >
           {featured.map((item) => (
             <div
               key={item.id}
-              className="flex-shrink-0 w-full h-full"
+              style={{
+                flex: '0 0 100%',
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+              }}
             >
               <img
-                src={item.image_url}
-                alt={item.title}
-                className="w-full h-full object-cover"
-                loading="eager"
-                decoding="async"
+                src={item.image_url || item.url || item.file_url || item.image}
+                alt={item.title || 'Portfolio'}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
               />
             </div>
           ))}
@@ -43,31 +68,46 @@ function HeroCarousel({ featured }) {
         <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink-light to-ink" />
       )}
 
-      {/* Service names overlay - bottom right */}
+      {/* Service names overlay - bottom right, sliding */}
       <div
-        className="absolute z-10 pointer-events-none bottom-4 right-4 sm:bottom-8 sm:right-8"
+        className="absolute z-10"
+        style={{
+          bottom: '1rem',
+          right: '1rem',
+          pointerEvents: 'none',
+        }}
       >
         <div
           style={{
-            animation: `carousel-slide 3s linear infinite`,
-            whiteSpace: 'nowrap',
+            display: 'flex',
+            animation: `carousel-slide ${serviceDuration}s linear infinite`,
+            willChange: 'transform',
           }}
         >
           {servicesForSlide.map((service) => (
-            <span
+            <div
               key={service.key}
               style={{
-                display: 'inline-block',
-                fontFamily: 'serif',
-                fontSize: 'clamp(0.75rem, 2.5vw, 1.5rem)',
-                color: '#d4a574',
-                fontWeight: 300,
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-                marginRight: '100vw',
+                flex: '0 0 100vw',
+                width: '100vw',
+                padding: '0 1rem',
               }}
             >
-              {service.title}
-            </span>
+              <p
+                style={{
+                  fontFamily: 'serif',
+                  fontSize: 'clamp(0.875rem, 3vw, 1.875rem)',
+                  color: '#d4a574',
+                  fontWeight: 300,
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  textAlign: 'right',
+                  whiteSpace: 'nowrap',
+                  margin: 0,
+                }}
+              >
+                {service.title}
+              </p>
+            </div>
           ))}
         </div>
       </div>
