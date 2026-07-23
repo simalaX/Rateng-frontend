@@ -26,7 +26,7 @@ function HeroCarousel({ featured }) {
   // Use SERVICES for sliding names (4 items)
   const servicesForSlide = SERVICES.slice(0, 4);
   const carouselDuration = featured.length > 0 ? featured.length * 3 : 3; // 3 seconds per image
-  const serviceDuration = 5; // 5 seconds for service names
+  const serviceDuration = 20; // 20 seconds for service names (5 seconds per name - readable)
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink min-h-96">
@@ -454,12 +454,10 @@ export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [portfolioFilter, setPortfolioFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
     setError(null);
 
     const fetchGallery = async () => {
@@ -497,10 +495,6 @@ export default function Home() {
 
         setFeatured([]);
         setError(err.message || 'Failed to load gallery');
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
       }
     };
 
@@ -664,12 +658,7 @@ export default function Home() {
             )}
           </div>
 
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-ink/60 text-base font-light">Loading portfolio...</p>
-              {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
-            </div>
-          ) : featured.length > 0 ? (
+          {featured.length > 0 ? (
             <div className="grid grid-cols-2 gap-8">
               {filteredFeatured.length > 0 ? (
                 filteredFeatured.map((item) => (
