@@ -9,28 +9,24 @@ import MediaCard from "../components/MediaCard";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { WHY_US, SERVICES, FAQS, PROCESS_STEPS } from "../data/staticContent";
 
-// Optimize image URL for mobile
-function optimizeImageUrl(url) {
+// Optimize image URL for fast loading
+function optimizeImageUrl(url, width = 1200) {
   if (!url) return '';
 
   // If it's a Cloudinary URL, optimize it
   if (url.includes('cloudinary.com') || url.includes('res.cloudinary.com')) {
-    // Add quality and size optimization
-    return url.replace('/upload/', '/upload/q_auto,f_auto,w_1200,c_limit/');
+    return url.replace('/upload/', `/upload/q_auto,f_auto,w_${width},c_limit/`);
   }
   return url;
 }
 
 // Hero Carousel Component with Service Names
 function HeroCarousel({ featured }) {
-  // Use SERVICES for sliding names (4 items)
-  const servicesForSlide = SERVICES.slice(0, 4);
-  const carouselDuration = featured.length > 0 ? featured.length * 3 : 3; // 3 seconds per image
-  const serviceDuration = 20; // 20 seconds for service names (5 seconds per name - readable)
+  const carouselDuration = featured.length > 0 ? featured.length * 3 : 3;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink min-h-96">
-      {/* Background carousel - featured images sliding left to right */}
+      {/* Background carousel - featured images */}
       {featured.length > 0 ? (
         <div
           className="absolute inset-0 w-full h-full"
@@ -42,7 +38,7 @@ function HeroCarousel({ featured }) {
           }}
         >
           {featured.map((item) => {
-            const imageUrl = optimizeImageUrl(item.image_url || item.url || item.file_url || item.image);
+            const imageUrl = optimizeImageUrl(item.image_url || item.url || item.file_url || item.image, 1600);
             return (
               <div
                 key={item.id}
@@ -61,7 +57,7 @@ function HeroCarousel({ featured }) {
                     alt={item.title || 'Portfolio'}
                     loading="eager"
                     decoding="async"
-                    srcSet={`${imageUrl} 1x, ${imageUrl.replace('/w_1200,', '/w_1600,')} 2x`}
+                    fetchPriority="high"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -82,47 +78,53 @@ function HeroCarousel({ featured }) {
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-ink via-ink-light to-ink" />
       )}
 
-      {/* Service names overlay - bottom right, sliding */}
+      {/* Service names carousel - 4 seconds total (1 second per name) */}
       <div
-        className="absolute z-10"
+        className="absolute z-10 bottom-4 sm:bottom-8 right-4 sm:right-8"
         style={{
-          bottom: '1rem',
-          right: '1rem',
           pointerEvents: 'none',
           overflow: 'hidden',
+          maxWidth: '90vw',
         }}
       >
         <div
           style={{
             display: 'flex',
-            animation: `serviceNamesSlide ${serviceDuration}s linear infinite`,
+            animation: `serviceNamesSlide 4s steps(4, end) infinite`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
           }}
         >
-          {servicesForSlide.map((service) => (
+          {[
+            { initial: 'C', name: 'Construction' },
+            { initial: 'S', name: 'Steel Fabrication' },
+            { initial: 'G', name: 'Glass and Aluminium' },
+            { initial: 'I', name: 'Interior Fittings' },
+          ].map((service, idx) => (
             <div
-              key={service.key}
+              key={idx}
               style={{
-                flex: '0 0 100vw',
-                width: '100vw',
-                minWidth: '100vw',
-                padding: '0 1rem',
+                flex: '0 0 100%',
+                width: '100%',
+                minWidth: 'auto',
+                padding: '0 0.5rem',
+                textAlign: 'right',
+                whiteSpace: 'nowrap',
               }}
             >
               <p
                 style={{
                   fontFamily: 'serif',
-                  fontSize: 'clamp(0.875rem, 3vw, 1.875rem)',
+                  fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
                   color: '#d4a574',
                   fontWeight: 300,
-                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-                  textAlign: 'right',
-                  whiteSpace: 'nowrap',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.6)',
                   margin: 0,
+                  letterSpacing: '0.05em',
                 }}
               >
-                {service.title}
+                <span style={{ fontWeight: 600, marginRight: '0.5rem' }}>{service.initial}</span>
+                {service.name}
               </p>
             </div>
           ))}
@@ -147,8 +149,26 @@ const fireStyles = `
   0% {
     transform: translateX(0);
   }
+  25% {
+    transform: translateX(0);
+  }
+  26% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(-100%);
+  }
+  51% {
+    transform: translateX(-200%);
+  }
+  75% {
+    transform: translateX(-200%);
+  }
+  76% {
+    transform: translateX(-300%);
+  }
   100% {
-    transform: translateX(-400%);
+    transform: translateX(-300%);
   }
 }
 
@@ -181,44 +201,6 @@ const fireStyles = `
   }
 }
 
-@keyframes serviceSlideInSequence {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-@keyframes fireBurnSequential {
-  0% {
-    clip-path: inset(0 100% 0 0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  80% {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    clip-path: inset(0 0 0 100%);
-    opacity: 0;
-  }
-}
-
 .fire-text {
   background: linear-gradient(90deg, 
     #ff6b1b 0%,
@@ -242,14 +224,6 @@ const fireStyles = `
 
 .fire-text--hero-delay-1 {
   animation-delay: 0s;
-}
-
-.fire-text--hero-delay-2 {
-  animation-delay: 0.3s;
-}
-
-.fire-text--hero-delay-3 {
-  animation-delay: 0.6s;
 }
 
 .fire-text--delay-location {
@@ -333,11 +307,10 @@ function ServicesGrid() {
     return () => observer.disconnect();
   }, []);
 
-  const totalDuration = SERVICES.length * 3.5; // Total time for all services (each gets 3.5s)
+  const totalDuration = SERVICES.length * 3.5;
 
   return (
     <section className="bg-paper py-32 sm:py-48 relative overflow-hidden">
-      {/* Subtle luxury background */}
       <div className="absolute inset-0" style={{
         backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(215, 180, 105, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(100, 90, 80, 0.01) 0%, transparent 50%)'
       }} />
@@ -353,7 +326,6 @@ function ServicesGrid() {
           </p>
         </div>
 
-        {/* Sequential Service Slide-In Animation - Infinite Loop */}
         <style>{`
           ${SERVICES.map((service, idx) => {
           const startTime = idx * 3.5;
@@ -403,7 +375,7 @@ function ServicesGrid() {
 
         <div ref={gridRef} className="relative min-h-96 overflow-hidden">
           {SERVICES.map((service, idx) => {
-            const serviceImageUrl = optimizeImageUrl(service.image);
+            const serviceImageUrl = optimizeImageUrl(service.image, 800);
             return (
               <div
                 key={service.key}
@@ -422,7 +394,6 @@ function ServicesGrid() {
                       alt={service.title}
                       loading="lazy"
                       decoding="async"
-                      srcSet={`${serviceImageUrl} 1x, ${serviceImageUrl.replace('/w_1200,', '/w_1600,')} 2x`}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                     />
                     <div className="absolute top-4 left-4 text-xs font-mono text-plaster/40">
@@ -462,37 +433,21 @@ export default function Home() {
 
     const fetchGallery = async () => {
       try {
-        console.log('Starting gallery fetch...');
         const response = await client.get("/api/gallery/", { params: { limit: 8 } });
-        console.log('Gallery API Response:', response);
 
         if (!active) return;
 
-        // Handle different response structures
         const items = response.data?.items || response.data || [];
-        console.log('Extracted items:', items);
-        console.log('Items length:', items.length);
 
         if (Array.isArray(items) && items.length > 0) {
-          console.log('First item:', items[0]);
           setFeatured(items);
           setError(null);
         } else {
-          console.warn('No items found in gallery response');
           setFeatured([]);
           setError('No gallery items available');
         }
       } catch (err) {
         if (!active) return;
-
-        console.error('Gallery API Error:', err);
-        console.error('Error details:', {
-          message: err.message,
-          status: err.response?.status,
-          statusText: err.response?.statusText,
-          data: err.response?.data,
-        });
-
         setFeatured([]);
         setError(err.message || 'Failed to load gallery');
       }
@@ -505,7 +460,6 @@ export default function Home() {
     };
   }, []);
 
-  // Filter featured items based on selected filter
   const filteredFeatured = featured.filter((item) => {
     if (portfolioFilter === 'all') return true;
 
@@ -542,10 +496,8 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- Hero */}
       <section className="relative bg-ink overflow-hidden min-h-screen">
-        {/* Carousel with portfolio images */}
         <HeroCarousel featured={featured} />
 
-        {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink" />
 
@@ -575,7 +527,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ------------------------------------------------------ Stats — Luxury Cards */}
+      {/* ------------------------------------------------------ Stats */}
       <section className="bg-paper py-24 sm:py-32">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
@@ -624,7 +576,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Portfolio Filter Tabs */}
             {featured.length > 0 && (
               <div className="flex gap-6 mb-12 border-b border-plaster/20 pb-4">
                 <button
