@@ -89,12 +89,13 @@ function HeroCarousel({ featured }) {
           bottom: '1rem',
           right: '1rem',
           pointerEvents: 'none',
+          overflow: 'hidden',
         }}
       >
         <div
           style={{
             display: 'flex',
-            animation: `carousel-slide ${serviceDuration}s linear infinite`,
+            animation: `serviceNamesSlide ${serviceDuration}s linear infinite`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
           }}
@@ -139,6 +140,15 @@ const fireStyles = `
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+
+@keyframes serviceNamesSlide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-400%);
   }
 }
 
