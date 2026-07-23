@@ -507,7 +507,7 @@ export default function Home() {
               Kenya • Uganda • South Sudan
             </p>
             <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-light leading-[1.1] mb-10">
-              <span className="fire-text fire-text--animated fire-text--hero-delay-1">Design . Build . Furnish.</span>
+              <span className="fire-text fire-text--animated fire-text--hero-delay-1">Design . Build . Furnish </span>
             </h1>
             <p className="text-plaster/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-light mb-12">
               From structural steel and glass facades to fully furnished interiors. One team. One point of contact. Every project, end to end.
